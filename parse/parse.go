@@ -22,3 +22,20 @@ func UintList(input string) ([]uint, error) {
 
 	return parsed, nil
 }
+
+// IntList parses a list of uint from a newline delimited string
+func IntList(input string) ([]int, error) {
+	lines := strings.Split(strings.TrimSpace(input), "\n")
+	parsed := make([]int, len(lines))
+
+	for i, line := range lines {
+		v, err := strconv.Atoi(line)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to parse int from %v: %w", line, err)
+		}
+
+		parsed[i] = v
+	}
+
+	return parsed, nil
+}
