@@ -2,6 +2,7 @@ package day01
 
 import (
 	"github.com/partylich/advent2021/parse"
+	"github.com/partylich/advent2021/runner"
 )
 
 var Parse = parse.UintList
@@ -17,4 +18,10 @@ func PartOne(depths []uint) uint {
 	}
 
 	return count
+}
+
+var Solution = runner.Solution{
+	Parse: func(i string) (interface{}, error) { return Parse(i) },
+	One:   func(i interface{}) interface{} { return PartOne(i.([]uint)) },
+	Two:   func(i interface{}) interface{} { return runner.Unimpl(i) },
 }
