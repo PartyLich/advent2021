@@ -1,5 +1,11 @@
 package day01
 
+import (
+	"github.com/partylich/advent2021/parse"
+)
+
+var Parse = parse.UintList
+
 // PartOne counts the number of times a depth measurement increases from the previous measurement.
 // (There is no measurement before the first measurement.)
 func PartOne(depths []uint) uint {
