@@ -6,9 +6,14 @@ import (
 	"strings"
 )
 
+// Lines splits a string at newline characters
+func Lines(input string) []string {
+	return strings.Split(strings.TrimSpace(input), "\n")
+}
+
 // UintList parses a list of uint from a newline delimited string
 func UintList(input string) ([]uint, error) {
-	lines := strings.Split(strings.TrimSpace(input), "\n")
+	lines := Lines(input)
 	parsed := make([]uint, len(lines))
 
 	for i, line := range lines {
@@ -25,7 +30,7 @@ func UintList(input string) ([]uint, error) {
 
 // IntList parses a list of uint from a newline delimited string
 func IntList(input string) ([]int, error) {
-	lines := strings.Split(strings.TrimSpace(input), "\n")
+	lines := Lines(input)
 	parsed := make([]int, len(lines))
 
 	for i, line := range lines {
