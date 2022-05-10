@@ -19,8 +19,10 @@ func handleErr(e error) {
 }
 
 func main() {
-	userVal := flag.String("day", "all", "run only the specified day, eg \"01\"")
-	userVal = flag.String("d", "all", "run only the specified day, eg \"01\"")
+	var userVal = new(string)
+
+	flag.StringVar(userVal, "d", "all", "run only the specified day, eg \"01\"")
+	flag.StringVar(userVal, "day", "all", "run only the specified day, eg \"01\"")
 	flag.Parse()
 
 	fmt.Println("Advent of Code 2021")
