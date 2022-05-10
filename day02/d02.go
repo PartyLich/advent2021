@@ -85,11 +85,26 @@ func PartOne(commands []command) int {
 // PartTwo calculates the horizontal position and depth after following the planned course.
 // Returns final horizontal position multiplied by final depth
 func PartTwo(commands []command) int {
-	return 0
+	var pos pos
+	var aim int
+
+	for _, v := range commands {
+		switch v.dir {
+		case Forward:
+			pos.horz += v.val
+			pos.depth += aim * v.val
+		case Down:
+			aim += v.val
+		case Up:
+			aim -= v.val
+		}
+	}
+
+	return pos.horz * pos.depth
 }
 
 var Solution = runner.Solution{
 	Parse: func(i string) (interface{}, error) { return parseCom(i) },
 	One:   func(i interface{}) interface{} { return PartOne(i.([]command)) },
-	Two:   func(i interface{}) interface{} { return runner.Unimpl(i) },
+	Two:   func(i interface{}) interface{} { return PartTwo(i.([]command)) },
 }
