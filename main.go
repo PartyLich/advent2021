@@ -37,7 +37,6 @@ func main() {
 		for k, v := range m {
 			handleErr(runner.RunDay(k, v))
 		}
-		break
 	default:
 		// run single day based on user input
 		s, ok := m[*userVal]
