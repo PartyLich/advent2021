@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/partylich/advent2021/day01"
+	"github.com/partylich/advent2021/day02"
 	"github.com/partylich/advent2021/runner"
 )
 
@@ -25,6 +26,7 @@ func main() {
 	fmt.Println("Advent of Code 2021")
 	m := map[string]runner.Solution{
 		"01": day01.Solution,
+		"02": day02.Solution,
 	}
 
 	switch *userVal {
