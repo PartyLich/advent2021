@@ -82,6 +82,12 @@ func PartOne(commands []command) int {
 	return pos.horz * pos.depth
 }
 
+// PartTwo calculates the horizontal position and depth after following the planned course.
+// Returns final horizontal position multiplied by final depth
+func PartTwo(commands []command) int {
+	return 0
+}
+
 var Solution = runner.Solution{
 	Parse: func(i string) (interface{}, error) { return parseCom(i) },
 	One:   func(i interface{}) interface{} { return PartOne(i.([]command)) },

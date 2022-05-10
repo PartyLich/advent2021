@@ -45,3 +45,20 @@ func TestPartOne(t *testing.T) {
 		t.Fatalf("PartOne(%v) == %v, want %v", in, have, want)
 	}
 }
+
+func TestPartTwo(t *testing.T) {
+	in := []command{
+		{Forward, 5},
+		{Down, 5},
+		{Forward, 8},
+		{Up, 3},
+		{Down, 8},
+		{Forward, 2},
+	}
+	var want int = 900
+
+	have := PartTwo(in)
+	if have != want {
+		t.Fatalf("PartOne(%v) \n have %v, want %v", in, have, want)
+	}
+}
