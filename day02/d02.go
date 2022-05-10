@@ -103,8 +103,10 @@ func PartTwo(commands []command) int {
 	return pos.horz * pos.depth
 }
 
-var Solution = runner.Solution{
-	Parse: func(i string) (interface{}, error) { return parseCom(i) },
-	One:   func(i interface{}) interface{} { return PartOne(i.([]command)) },
-	Two:   func(i interface{}) interface{} { return PartTwo(i.([]command)) },
+func Solution() runner.Solution {
+	return runner.Solution{
+		Parse: func(i string) (interface{}, error) { return parseCom(i) },
+		One:   func(i interface{}) interface{} { return PartOne(i.([]command)) },
+		Two:   func(i interface{}) interface{} { return PartTwo(i.([]command)) },
+	}
 }

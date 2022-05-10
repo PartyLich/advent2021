@@ -52,8 +52,10 @@ func PartTwo(depths []uint) uint {
 	return count
 }
 
-var Solution = runner.Solution{
-	Parse: func(i string) (interface{}, error) { return Parse(i) },
-	One:   func(i interface{}) interface{} { return PartOne(i.([]uint)) },
-	Two:   func(i interface{}) interface{} { return PartTwo(i.([]uint)) },
+func Solution() runner.Solution {
+	return runner.Solution{
+		Parse: func(i string) (interface{}, error) { return Parse(i) },
+		One:   func(i interface{}) interface{} { return PartOne(i.([]uint)) },
+		Two:   func(i interface{}) interface{} { return PartTwo(i.([]uint)) },
+	}
 }
