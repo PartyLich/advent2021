@@ -51,6 +51,11 @@ func PartOne(in []string) int {
 	return gamma * epsilon
 }
 
+// PartTwo multiplies the oxygen generator rating by the CO2 scrubber rating
+func PartTwo(in []string) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i), nil },
