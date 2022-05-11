@@ -8,6 +8,7 @@ import (
 
 	"github.com/partylich/advent2021/day01"
 	"github.com/partylich/advent2021/day02"
+	"github.com/partylich/advent2021/day03"
 	"github.com/partylich/advent2021/runner"
 )
 
@@ -29,6 +30,7 @@ func main() {
 	m := map[string]runner.Solution{
 		"01": day01.Solution(),
 		"02": day02.Solution(),
+		"03": day03.Solution(),
 	}
 
 	switch *userVal {
