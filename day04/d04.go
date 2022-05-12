@@ -138,10 +138,16 @@ play:
 	return score
 }
 
+// PartTwo finds the sum of all unmarked numbers the last bingo board to win,
+// then multiplies that sum by the last number called
+func PartTwo(game bingo) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i) },
 		One:   func(i interface{}) interface{} { return PartOne(i.(bingo)) },
-		Two:   runner.Unimpl,
+		Two:   func(i interface{}) interface{} { return PartTwo(i.(bingo)) },
 	}
 }
