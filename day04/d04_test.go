@@ -1,6 +1,44 @@
 package day04
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/partylich/advent2021/runner"
+)
+
+func TestParse(t *testing.T) {
+	in := `7,4,9,5
+
+22 13 17
+ 8  2 23
+21  9 14
+`
+
+	have, err := Parse(in)
+	if err != nil {
+		t.Fatalf("Parse(%v) error %v", in, err)
+	}
+
+	draws := []string{"7", "4", "9", "5"}
+	for i, d := range draws {
+		if d != have.draws[i] {
+			t.Fatalf("Parse draws\n\thave %v\n\twant %v", have.draws, draws)
+		}
+	}
+
+	player := newPlayer(
+		[][]string{
+			{"22", "13", "17"},
+			{"8", "2", "23"},
+			{"21", "9", "14"},
+		},
+	)
+	for i, row := range player.board {
+		if !runner.SliceCompare[string](row, have.players[0].board[i]) {
+			t.Fatalf("Parse board(%v) == %v, want %v", in, have.players[0].board[i], row)
+		}
+	}
+}
 
 func TestPartOne(t *testing.T) {
 	in := []string{"7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1",
