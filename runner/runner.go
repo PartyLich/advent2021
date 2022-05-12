@@ -28,16 +28,21 @@ func RunDay(day string, solution Solution) error {
 		return err
 	}
 
+	start := time.Now()
 	inp, err := solution.Parse(string(input))
 	if err != nil {
 		return err
 	}
 
-	start := time.Now()
 	res, dur := duration(solution.One(inp), start)
 	fmt.Printf("\tDay %v.1: %v\t%v\n", day, res, dur)
 
 	start = time.Now()
+	inp, err = solution.Parse(string(input))
+	if err != nil {
+		return err
+	}
+
 	res, dur = duration(solution.Two(inp), start)
 	fmt.Printf("\tDay %v.2: %v\t%v\n", day, res, dur)
 
