@@ -2,7 +2,10 @@
 package day04
 
 import (
+	"strconv"
 	"strings"
+
+	"golang.org/x/exp/slices"
 
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
@@ -68,15 +71,77 @@ func Parse(in string) (bingo, error) {
 	}, nil
 }
 
-// PartOne
-func PartOne(in []string) int {
-	return 0
+func updatePlayer(p *player, num string) {
+	for r, row := range p.board {
+		if c := slices.Index(row, num); c != -1 {
+			p.rowSum[r] += 1
+			p.colSum[c] += 1
+			// why the actual fuck doesnt the math package have a max fn for int?
+			// ...especially when int is the DEFAULT number type. jfc
+			if p.rowSum[r] > p.max {
+				p.max = p.rowSum[r]
+			}
+			if p.colSum[c] > p.max {
+				p.max = p.colSum[c]
+			}
+
+			p.marked[r][c] = true
+
+			return
+		}
+	}
+}
+
+func getScore(p *player, lastCall string) int {
+	var score int
+
+	lastNum, err := strconv.Atoi(lastCall)
+	if err != nil {
+		panic(err)
+	}
+
+	// find the sum of all unmarked numbers
+	for r, row := range p.board {
+		for c, num := range row {
+			if p.marked[r][c] {
+				continue
+			}
+			val, err := strconv.Atoi(num)
+			if err != nil {
+				panic(err)
+			}
+
+			score += val
+		}
+	}
+
+	return score * lastNum
+}
+
+// PartOne finds the sum of all unmarked numbers on a winning bingo board, then
+// multiplies that sum by the last number called
+func PartOne(game bingo) int {
+	var score int
+
+play:
+	for _, num := range game.draws {
+		for i := range game.players {
+			updatePlayer(&game.players[i], num)
+
+			if game.players[i].max == gridSize {
+				score = getScore(&game.players[i], num)
+				break play
+			}
+		}
+	}
+
+	return score
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i) },
-		One:   func(i interface{}) interface{} { return PartOne(i.([]string)) },
+		One:   func(i interface{}) interface{} { return PartOne(i.(bingo)) },
 		Two:   runner.Unimpl,
 	}
 }
