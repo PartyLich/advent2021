@@ -141,7 +141,28 @@ play:
 // PartTwo finds the sum of all unmarked numbers the last bingo board to win,
 // then multiplies that sum by the last number called
 func PartTwo(game bingo) int {
-	return 0
+	var score int
+
+play:
+	for _, num := range game.draws {
+		var remainingPlayers = make([]player, 0, len(game.players))
+
+		for i := range game.players {
+			updatePlayer(&game.players[i], num)
+
+			if game.players[i].max < gridSize || len(game.players) == 1 {
+				remainingPlayers = append(remainingPlayers, game.players[i])
+			}
+		}
+
+		game.players = remainingPlayers
+		if len(game.players) == 1 && game.players[0].max == gridSize {
+			score = getScore(&game.players[0], num)
+			break play
+		}
+	}
+
+	return score
 }
 
 func Solution() runner.Solution {
