@@ -41,3 +41,12 @@ func RunDay(day string, solution Solution) error {
 
 	return nil
 }
+
+// Max returns the largest of two integers
+func Max(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}
