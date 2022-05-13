@@ -121,6 +121,12 @@ func PartOne(in []string) int {
 	return count
 }
 
+// PartTwo returns the number of points where at least two lines overlap,
+// considering horizontal, vertical, and diagonal (45deg) lines
+func PartTwo(in []string) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i), nil },

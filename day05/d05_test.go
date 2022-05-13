@@ -42,3 +42,13 @@ func BenchmarkPartOne(b *testing.B) {
 		PartOne(in)
 	}
 }
+
+func TestPartTwo(t *testing.T) {
+	in := Parse(ex)
+	want := 12
+
+	have := PartTwo(in)
+	if have != want {
+		t.Fatalf("PartTwo(%v) == %v, want %v", in, have, want)
+	}
+}
