@@ -90,16 +90,42 @@ func parseLines(in []string) (parseResult, error) {
 	}, nil
 }
 
-// PartOne
+// PartOne returns the number of points where at least two lines overlap,
+// considering only horizontal and vertical lines
 func PartOne(in []string) int {
-	return 0
+	parsed, err := parseLines(in)
+	if err != nil {
+		panic(err)
+	}
+
+	grid := make([][]int, parsed.maxY+1)
+	for i := range grid {
+		grid[i] = make([]int, parsed.maxX+1)
+	}
+
+	var count int
+	for _, l := range parsed.lines {
+		for r := l.Start[1]; r <= l.End[1]; r++ {
+			for c := l.Start[0]; c <= l.End[0]; c++ {
+				if grid[r][c] <= 1 && grid[r][c] > -1 {
+					grid[r][c] += 1
+				}
+				if grid[r][c] > 1 {
+					count += 1
+					grid[r][c] = -1
+				}
+			}
+		}
+	}
+
+	return count
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i), nil },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.([]string)) },
 			runner.Unimpl,
 		},
 	}
