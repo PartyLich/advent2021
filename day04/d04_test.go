@@ -3,7 +3,7 @@ package day04
 import (
 	"testing"
 
-	"github.com/partylich/advent2021/runner"
+	"github.com/partylich/advent2021/slice"
 )
 
 func TestParse(t *testing.T) {
@@ -34,7 +34,7 @@ func TestParse(t *testing.T) {
 		},
 	)
 	for i, row := range player.board {
-		if !runner.SliceCompare[string](row, have.players[0].board[i]) {
+		if !slice.Compare[string](row, have.players[0].board[i]) {
 			t.Fatalf("Parse board(%v) == %v, want %v", in, have.players[0].board[i], row)
 		}
 	}

@@ -41,13 +41,3 @@ func RunDay(day string, solution Solution) error {
 
 	return nil
 }
-
-func SliceCompare[T comparable](a []T, b []T) bool {
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
-}
