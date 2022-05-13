@@ -6,6 +6,19 @@ import (
 	"github.com/partylich/advent2021/runner"
 )
 
+type Line struct {
+	Start []int
+	End   []int
+}
+
+func (l Line) horz() bool {
+	return l.Start[1] == l.End[1]
+}
+
+func (l Line) vert() bool {
+	return l.Start[0] == l.End[0]
+}
+
 var Parse = parse.Lines
 
 // PartOne
