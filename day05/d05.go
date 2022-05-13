@@ -80,12 +80,7 @@ func parseLines(in []string) (parseResult, error) {
 	}
 
 	return parseResult{
-		slice.Filter(
-			func(l Line) bool {
-				return l.horz() || l.vert()
-			},
-			lines,
-		),
+		lines,
 		maxX, maxY,
 	}, nil
 }
@@ -97,6 +92,12 @@ func PartOne(in []string) int {
 	if err != nil {
 		panic(err)
 	}
+	parsed.lines = slice.Filter(
+		func(l Line) bool {
+			return l.horz() || l.vert()
+		},
+		parsed.lines,
+	)
 
 	grid := runner.NewGrid[int](parsed.maxY+1, parsed.maxX+1)
 
