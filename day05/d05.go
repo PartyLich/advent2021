@@ -98,10 +98,7 @@ func PartOne(in []string) int {
 		panic(err)
 	}
 
-	grid := make([][]int, parsed.maxY+1)
-	for i := range grid {
-		grid[i] = make([]int, parsed.maxX+1)
-	}
+	grid := runner.NewGrid[int](parsed.maxY+1, parsed.maxX+1)
 
 	var count int
 	for _, l := range parsed.lines {
