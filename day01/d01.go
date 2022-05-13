@@ -55,7 +55,9 @@ func PartTwo(depths []uint) uint {
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i) },
-		One:   func(i interface{}) interface{} { return PartOne(i.([]uint)) },
-		Two:   func(i interface{}) interface{} { return PartTwo(i.([]uint)) },
+		Fn: [2]func(i interface{}) interface{}{
+			func(i interface{}) interface{} { return PartOne(i.([]uint)) },
+			func(i interface{}) interface{} { return PartTwo(i.([]uint)) },
+		},
 	}
 }

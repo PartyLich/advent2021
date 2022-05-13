@@ -118,7 +118,9 @@ func PartTwo(in []string) int {
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i), nil },
-		One:   func(i interface{}) interface{} { return PartOne(i.([]string)) },
-		Two:   func(i interface{}) interface{} { return PartTwo(i.([]string)) },
+		Fn: [2]func(i interface{}) interface{}{
+			func(i interface{}) interface{} { return PartOne(i.([]string)) },
+			func(i interface{}) interface{} { return PartTwo(i.([]string)) },
+		},
 	}
 }

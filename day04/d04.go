@@ -168,7 +168,9 @@ play:
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return Parse(i) },
-		One:   func(i interface{}) interface{} { return PartOne(i.(bingo)) },
-		Two:   func(i interface{}) interface{} { return PartTwo(i.(bingo)) },
+		Fn: [2]func(i interface{}) interface{}{
+			func(i interface{}) interface{} { return PartOne(i.(bingo)) },
+			func(i interface{}) interface{} { return PartTwo(i.(bingo)) },
+		},
 	}
 }

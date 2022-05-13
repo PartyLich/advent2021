@@ -12,8 +12,7 @@ func Unimpl(_i interface{}) interface{} { return "UNIMPLEMENTED" }
 // Solution defines methods required for each AoC puzzle solution
 type Solution struct {
 	Parse func(string) (interface{}, error)
-	One   func(interface{}) interface{}
-	Two   func(interface{}) interface{}
+	Fn    [2]func(interface{}) interface{}
 }
 
 func duration(val interface{}, start time.Time) (interface{}, string) {
@@ -28,23 +27,17 @@ func RunDay(day string, solution Solution) error {
 		return err
 	}
 
-	start := time.Now()
-	inp, err := solution.Parse(string(input))
-	if err != nil {
-		return err
+	for part, fn := range solution.Fn {
+		start := time.Now()
+
+		inp, err := solution.Parse(string(input))
+		if err != nil {
+			return err
+		}
+
+		res, dur := duration(fn(inp), start)
+		fmt.Printf("\tDay %v.%v: %v\t%v\n", day, part, res, dur)
 	}
-
-	res, dur := duration(solution.One(inp), start)
-	fmt.Printf("\tDay %v.1: %v\t%v\n", day, res, dur)
-
-	start = time.Now()
-	inp, err = solution.Parse(string(input))
-	if err != nil {
-		return err
-	}
-
-	res, dur = duration(solution.Two(inp), start)
-	fmt.Printf("\tDay %v.2: %v\t%v\n", day, res, dur)
 
 	return nil
 }
