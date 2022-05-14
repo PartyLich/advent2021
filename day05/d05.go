@@ -127,19 +127,23 @@ func PartTwo(in []string) int {
 	}
 
 	grid := runner.NewGrid[int](parsed.maxY+1, parsed.maxX+1)
+	count := 0
 
-	var count int
+	update := func(r, c int) {
+		if grid[r][c] <= 1 && grid[r][c] > -1 {
+			grid[r][c] += 1
+		}
+		if grid[r][c] > 1 {
+			count += 1
+			grid[r][c] = -1
+		}
+	}
+
 	for _, l := range parsed.lines {
 		if l.horz() || l.vert() {
 			for r := l.Start[1]; r <= l.End[1]; r++ {
 				for c := l.Start[0]; c <= l.End[0]; c++ {
-					if grid[r][c] <= 1 && grid[r][c] > -1 {
-						grid[r][c] += 1
-					}
-					if grid[r][c] > 1 {
-						count += 1
-						grid[r][c] = -1
-					}
+					update(r, c)
 				}
 			}
 		} else {
@@ -155,13 +159,7 @@ func PartTwo(in []string) int {
 			}
 
 			for r, c := l.Start[1], l.Start[0]; r <= l.End[1] && pred(c); r, c = r+1, c+step {
-				if grid[r][c] <= 1 && grid[r][c] > -1 {
-					grid[r][c] += 1
-				}
-				if grid[r][c] > 1 {
-					count += 1
-					grid[r][c] = -1
-				}
+				update(r, c)
 			}
 		}
 	}
