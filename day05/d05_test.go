@@ -52,3 +52,18 @@ func TestPartTwo(t *testing.T) {
 		t.Fatalf("PartTwo(%v) == %v, want %v", in, have, want)
 	}
 }
+
+func BenchmarkPartTwo(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "05")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in := Parse(string(input))
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartTwo(in)
+	}
+}
