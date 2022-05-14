@@ -71,8 +71,7 @@ func parseLines(in []string) (parseResult, error) {
 		l := Line{startPt, endPt}
 		if l.horz() && startPt[0] > endPt[0] {
 			l = Line{endPt, startPt}
-		}
-		if l.vert() && startPt[1] > endPt[1] {
+		} else if startPt[1] > endPt[1] {
 			l = Line{endPt, startPt}
 		}
 
@@ -122,7 +121,52 @@ func PartOne(in []string) int {
 // PartTwo returns the number of points where at least two lines overlap,
 // considering horizontal, vertical, and diagonal (45deg) lines
 func PartTwo(in []string) int {
-	return 0
+	parsed, err := parseLines(in)
+	if err != nil {
+		panic(err)
+	}
+
+	grid := runner.NewGrid[int](parsed.maxY+1, parsed.maxX+1)
+
+	var count int
+	for _, l := range parsed.lines {
+		if l.horz() || l.vert() {
+			for r := l.Start[1]; r <= l.End[1]; r++ {
+				for c := l.Start[0]; c <= l.End[0]; c++ {
+					if grid[r][c] <= 1 && grid[r][c] > -1 {
+						grid[r][c] += 1
+					}
+					if grid[r][c] > 1 {
+						count += 1
+						grid[r][c] = -1
+					}
+				}
+			}
+		} else {
+			step := 1
+			pred := func(i int) bool {
+				return i <= l.End[0]
+			}
+			if l.Start[0] > l.End[0] {
+				step = -1
+				pred = func(i int) bool {
+					return i >= l.End[0]
+				}
+			}
+
+			for r, c := l.Start[1], l.Start[0]; r <= l.End[1] && pred(c); r, c = r+1, c+step {
+				if grid[r][c] <= 1 && grid[r][c] > -1 {
+					grid[r][c] += 1
+				}
+				if grid[r][c] > 1 {
+					count += 1
+					grid[r][c] = -1
+				}
+			}
+		}
+	}
+
+	return count
 }
 
 func Solution() runner.Solution {
@@ -130,7 +174,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return Parse(i), nil },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.([]string)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.([]string)) },
 		},
 	}
 }
