@@ -41,3 +41,22 @@ func RunDay(day string, solution Solution) error {
 
 	return nil
 }
+
+// Max returns the largest of two integers
+func Max(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}
+
+// NewGrid creates a grid with r rows and c columns
+func NewGrid[T any](r, c int) [][]T {
+	grid := make([][]T, r)
+	for i := range grid {
+		grid[i] = make([]T, c)
+	}
+
+	return grid
+}

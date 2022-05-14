@@ -74,3 +74,15 @@ func ReduceRight[T any, O any](fn func(O, T) O) func(list []T, init O) O {
 		return out
 	}
 }
+
+func Filter[T any](pred func(T) bool, list []T) []T {
+	result := make([]T, 0, len(list))
+
+	for _, v := range list {
+		if pred(v) {
+			result = append(result, v)
+		}
+	}
+
+	return result
+}
