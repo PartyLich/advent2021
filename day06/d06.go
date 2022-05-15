@@ -28,23 +28,29 @@ func parseFish(in string) ([]int, error) {
 	return result, nil
 }
 
+func breed(state []int, steps int) []int {
+	for i := 0; i < steps; i++ {
+		born := state[0]
+
+		for j := 0; j < 8; j++ {
+			state[j] = state[j+1]
+		}
+
+		state[8] = born
+		state[6] += born
+	}
+
+	return state
+}
+
 // PartOne returns the number of fish after 80 days
 func PartOne(in []int) int {
 	const steps int = 80
 
-	for i := 0; i < steps; i++ {
-		born := in[0]
-
-		for j := 0; j < 8; j++ {
-			in[j] = in[j+1]
-		}
-
-		in[8] = born
-		in[6] += born
-	}
-
+	state := breed(in, steps)
 	count := 0
-	for _, v := range in {
+
+	for _, v := range state {
 		count += v
 	}
 
@@ -55,19 +61,10 @@ func PartOne(in []int) int {
 func PartTwo(in []int) int {
 	const steps int = 256
 
-	for i := 0; i < steps; i++ {
-		born := in[0]
-
-		for j := 0; j < 8; j++ {
-			in[j] = in[j+1]
-		}
-
-		in[8] = born
-		in[6] += born
-	}
-
+	state := breed(in, steps)
 	count := 0
-	for _, v := range in {
+
+	for _, v := range state {
 		count += v
 	}
 
