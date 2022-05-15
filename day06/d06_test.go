@@ -32,3 +32,17 @@ func TestPartOne(t *testing.T) {
 		t.Fatalf("PartOne(%v) == %v, want %v", in, have, want)
 	}
 }
+
+func TestPartTwo(t *testing.T) {
+	in, err := parseFish(ex)
+	if err != nil {
+		t.Fatalf("Parse failure")
+	}
+
+	want := 26984457539
+
+	have := PartTwo(in)
+	if have != want {
+		t.Fatalf("PartTwo(%v) == %v, want %v", in, have, want)
+	}
+}
