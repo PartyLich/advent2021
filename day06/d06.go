@@ -51,12 +51,35 @@ func PartOne(in []int) int {
 	return count
 }
 
+// PartTwo returns the number of fish after 256 days
+func PartTwo(in []int) int {
+	const steps int = 256
+
+	for i := 0; i < steps; i++ {
+		born := in[0]
+
+		for j := 0; j < 8; j++ {
+			in[j] = in[j+1]
+		}
+
+		in[8] = born
+		in[6] += born
+	}
+
+	count := 0
+	for _, v := range in {
+		count += v
+	}
+
+	return count
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseFish(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.([]int)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.([]int)) },
 		},
 	}
 }
