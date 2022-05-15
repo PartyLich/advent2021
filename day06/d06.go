@@ -30,14 +30,32 @@ func parseFish(in string) ([]int, error) {
 
 // PartOne returns the number of fish after 80 days
 func PartOne(in []int) int {
-	return 0
+	const steps int = 80
+
+	for i := 0; i < steps; i++ {
+		born := in[0]
+
+		for j := 0; j < 8; j++ {
+			in[j] = in[j+1]
+		}
+
+		in[8] = born
+		in[6] += born
+	}
+
+	count := 0
+	for _, v := range in {
+		count += v
+	}
+
+	return count
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseFish(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.([]int)) },
 			runner.Unimpl,
 		},
 	}
