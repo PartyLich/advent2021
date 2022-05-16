@@ -51,6 +51,15 @@ func Max(a, b int) int {
 	}
 }
 
+// Min returns the smallest of two integers.
+func Min(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
 // NewGrid creates a grid with r rows and c columns
 func NewGrid[T any](r, c int) [][]T {
 	grid := make([][]T, r)
