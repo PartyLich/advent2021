@@ -44,3 +44,20 @@ func IntList(input string) ([]int, error) {
 
 	return parsed, nil
 }
+
+// Csv parses a single line of comma separated values into a slice of T.
+func Csv[T any](input string, conv func(string) (T, error)) ([]T, error) {
+	records := strings.Split(strings.TrimSpace(input), ",")
+
+	result := make([]T, len(records))
+	for i, r := range records {
+		v, err := conv(r)
+		if err != nil {
+			return result, err
+		}
+
+		result[i] = v
+	}
+
+	return result, nil
+}
