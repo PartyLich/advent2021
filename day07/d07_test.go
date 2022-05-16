@@ -22,6 +22,20 @@ func TestPartOne(t *testing.T) {
 	}
 }
 
+func TestPartTwo(t *testing.T) {
+	in, err := parsePos(ex)
+	if err != nil {
+		t.Fatalf("Parse failure")
+	}
+
+	want := 168
+
+	have := PartTwo(in)
+	if have != want {
+		t.Fatalf("PartOne(%v) == %v, want %v", in, have, want)
+	}
+}
+
 func BenchmarkPartOne(b *testing.B) {
 	fileName := fmt.Sprintf("../input/%v.txt", "07")
 	input, err := os.ReadFile(fileName)

@@ -63,6 +63,12 @@ func PartOne(in []int) int {
 	return minCost
 }
 
+// PartTwo returns the smallest total fuel spent required to align all crabs.
+// Cost is now like an arithemetic sequence or something I guess
+func PartTwo(in []int) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parsePos(i) },
