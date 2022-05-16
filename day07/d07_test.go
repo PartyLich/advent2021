@@ -1,6 +1,10 @@
 package day07
 
-import "testing"
+import (
+	"fmt"
+	"os"
+	"testing"
+)
 
 const ex string = `16,1,2,0,4,2,7,1,2,14`
 
@@ -15,5 +19,24 @@ func TestPartOne(t *testing.T) {
 	have := PartOne(in)
 	if have != want {
 		t.Fatalf("PartOne(%v) == %v, want %v", in, have, want)
+	}
+}
+
+func BenchmarkPartOne(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "07")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in, err := parsePos(string(input))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartOne(in)
 	}
 }
