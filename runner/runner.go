@@ -36,7 +36,7 @@ func RunDay(day string, solution Solution) error {
 		}
 
 		res, dur := duration(fn(inp), start)
-		fmt.Printf("\tDay %v.%v: %v\t%v\n", day, part, res, dur)
+		fmt.Printf("\tDay %v.%v: %18s\t%v\n", day, part+1, fmt.Sprintf("%v", res), dur)
 	}
 
 	return nil
