@@ -54,3 +54,22 @@ func BenchmarkPartOne(b *testing.B) {
 		PartOne(in)
 	}
 }
+
+func BenchmarkPartTwo(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "07")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in, err := parsePos(string(input))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartTwo(in)
+	}
+}
