@@ -2,6 +2,8 @@
 package day08
 
 import (
+	"strings"
+
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
@@ -12,6 +14,13 @@ func parseLines(in string) (_ParseResult, error) {
 	lines := parse.Lines(in)
 	result := runner.NewGrid[[]string](len(lines), 2)
 
+	for i, v := range lines {
+		parts := strings.Split(v, " | ")
+		signals := strings.Fields(strings.TrimSpace(parts[0]))
+		output := strings.Fields(strings.TrimSpace(parts[1]))
+		result[i][0], result[i][1] = signals, output
+	}
+
 	return result, nil
 }
 
@@ -19,6 +28,22 @@ func parseLines(in string) (_ParseResult, error) {
 // values
 func PartOne(in _ParseResult) int {
 	count := 0
+
+	for _, v := range in {
+		for _, digit := range v[1] {
+			switch len(digit) {
+			case 2:
+				fallthrough
+			case 4:
+				fallthrough
+			case 3:
+				fallthrough
+			case 7:
+				count += 1
+			}
+		}
+	}
+
 	return count
 }
 
