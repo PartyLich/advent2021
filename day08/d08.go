@@ -47,6 +47,12 @@ func PartOne(in _ParseResult) int {
 	return count
 }
 
+// PartTwo returns the sum of all decoded outputs
+func PartTwo(in _ParseResult) int {
+	count := 0
+	return count
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
