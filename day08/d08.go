@@ -84,8 +84,8 @@ const (
 	nine  = t | b | c | tl | tr | br
 )
 
-// decode displayed output given a set of 10 signals
-func decode(signals, outputs []string) int {
+// return wire->segment mapping given a set of 10 signals
+func decodeSignals(signals []string) map[rune]int {
 	runeToVal := make(map[rune]int)
 	valToRune := make(map[int]rune)
 
@@ -148,6 +148,11 @@ func decode(signals, outputs []string) int {
 		}
 	}
 
+	return runeToVal
+}
+
+// decode displayed digits given wire->segment mapping
+func decodeOutput(runeToVal map[rune]int, outputs []string) int {
 	// from binary rep to int
 	conv := map[int]int{
 		zero:  0,
@@ -185,7 +190,8 @@ func PartTwo(in _ParseResult) int {
 	sum := 0
 
 	for _, line := range in {
-		num := decode(line[0], line[1])
+		runeMap := decodeSignals(line[0])
+		num := decodeOutput(runeMap, line[1])
 		sum += num
 	}
 
