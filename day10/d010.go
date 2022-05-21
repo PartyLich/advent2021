@@ -2,6 +2,8 @@
 package day10
 
 import (
+	"strings"
+
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
@@ -11,6 +13,11 @@ type _ParseResult = [][]string
 func parseLines(in string) (_ParseResult, error) {
 	lines := parse.Lines(in)
 	result := make([][]string, len(lines))
+
+	for r, l := range lines {
+		syms := strings.Split(l, "")
+		result[r] = syms
+	}
 
 	return result, nil
 }
