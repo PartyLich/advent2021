@@ -2,6 +2,8 @@
 package day09
 
 import (
+	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -72,9 +74,67 @@ func PartOne(in _ParseResult) int {
 	return sum
 }
 
+func toKey(r, c int) string {
+	return fmt.Sprintf("%v,%v", c, r)
+}
+
+func traverse(m map[string]string, r, c int) int {
+	key := toKey(r, c)
+	if height, ok := m[key]; !ok || height == "9" {
+		return 0
+	}
+
+	delete(m, key)
+
+	return 1 +
+		traverse(m, r-1, c) +
+		traverse(m, r+1, c) +
+		traverse(m, r, c-1) +
+		traverse(m, r, c+1)
+}
+
 // PartTwo returns the product of the three largest basins
+//
+// A basin is all locations that eventually flow downward to a single low point.
+// Therefore, every low point has a basin, although some basins are very small.
+// Locations of height 9 do not count as being in any basin, and all other
+// locations will always be part of exactly one basin.
+//
+// The size of a basin is the number of locations within the basin, including
+// the low point.
 func PartTwo(in _ParseResult) int {
-	product := 0
+	product := 1
+
+	// map from pos to val. could have been done in one pass during the parse
+	m := make(map[string]string)
+	for r, row := range in {
+		for c, height := range row {
+			m[toKey(r, c)] = height
+		}
+	}
+
+	var basins []int
+	for r, row := range in {
+		for c := range row {
+			key := toKey(r, c)
+
+			if height, ok := m[key]; !ok || height == "9" {
+				continue
+			}
+
+			size := traverse(m, r, c)
+			if size == 0 {
+				continue
+			}
+
+			basins = append(basins, size)
+		}
+	}
+
+	sort.Ints(basins)
+	for i, c := len(basins)-1, 3; c > 0; i, c = i-1, c-1 {
+		product *= basins[i]
+	}
 
 	return product
 }
