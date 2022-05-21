@@ -9,6 +9,7 @@ import (
 
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
+	"github.com/partylich/go/iter"
 )
 
 type _ParseResult = [][]string
@@ -103,8 +104,6 @@ func traverse(m map[string]string, r, c int) int {
 // The size of a basin is the number of locations within the basin, including
 // the low point.
 func PartTwo(in _ParseResult) int {
-	product := 1
-
 	// map from pos to val. could have been done in one pass during the parse
 	m := make(map[string]string)
 	for r, row := range in {
@@ -132,11 +131,10 @@ func PartTwo(in _ParseResult) int {
 	}
 
 	sort.Ints(basins)
-	for i, c := len(basins)-1, 3; c > 0; i, c = i-1, c-1 {
-		product *= basins[i]
-	}
-
-	return product
+	it := iter.New(basins).Rev().Take(3)
+	return iter.Reduce[int, int](it, 1, func(prev, next int) int {
+		return prev * next
+	})
 }
 
 func Solution() runner.Solution {
