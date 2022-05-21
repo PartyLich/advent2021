@@ -72,12 +72,19 @@ func PartOne(in _ParseResult) int {
 	return sum
 }
 
+// PartTwo returns the product of the three largest basins
+func PartTwo(in _ParseResult) int {
+	product := 0
+
+	return product
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
