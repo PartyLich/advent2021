@@ -113,6 +113,11 @@ func PartOne(in _ParseResult) int {
 	return state.flashes
 }
 
+// PartTwo returns the first step that all octopi flash simultaneously
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
