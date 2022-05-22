@@ -101,6 +101,11 @@ func PartOne(in _ParseResult) int {
 	return sum
 }
 
+// PartTwo returns the middle autocomplete score
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
