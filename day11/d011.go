@@ -57,14 +57,11 @@ func flash(s state, f []bool, r, c int) (state, []bool) {
 	// octopuses that are diagonally adjacent
 	// If this causes an octopus to have an energy level greater than 9, it also
 	// flashes.
-	for y := r - 1; y <= r+1; y++ {
-		if y < 0 || y >= h {
-			continue
-		}
-
-		for x := c - 1; x <= c+1; x++ {
-			if x < 0 || x >= w ||
-				f[Idx1D(w, y, x)] {
+	lower, upper := runner.Max(0, r-1), runner.Min(r+1, h-1)
+	for y := lower; y <= upper; y++ {
+		lower, upper := runner.Max(0, c-1), runner.Min(c+1, w-1)
+		for x := lower; x <= upper; x++ {
+			if f[Idx1D(w, y, x)] {
 				continue
 			}
 
