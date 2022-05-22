@@ -64,23 +64,8 @@ func checkLine(syms []string) (string, bool) {
 				return incomplete, false
 			}
 
-			switch s {
-			case ")":
-				if *last != "(" {
-					return s, false
-				}
-			case "]":
-				if *last != "[" {
-					return s, false
-				}
-			case "}":
-				if *last != "{" {
-					return s, false
-				}
-			case ">":
-				if *last != "<" {
-					return s, false
-				}
+			if s != pairs[*last] {
+				return s, false
 			}
 		}
 	}
