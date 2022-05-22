@@ -5,8 +5,6 @@ import (
 	"sort"
 	"strings"
 
-	"golang.org/x/exp/slices"
-
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
@@ -32,7 +30,12 @@ var (
 		"}": 1197,
 		">": 25137,
 	}
-	openers = []string{"(", "[", "{", "<"}
+	pairs = map[string]string{
+		"(": ")",
+		"[": "]",
+		"{": "}",
+		"<": ">",
+	}
 )
 
 const incomplete string = "incomplete"
@@ -53,7 +56,7 @@ func checkLine(syms []string) (string, bool) {
 	stack := make([]string, 0, len(syms))
 
 	for _, s := range syms {
-		if slices.Contains(openers, s) {
+		if _, ok := pairs[s]; ok {
 			stack = append(stack, s)
 		} else {
 			last := pop(&stack)
@@ -114,12 +117,6 @@ func PartTwo(in _ParseResult) int {
 			"]": 2,
 			"}": 3,
 			">": 4,
-		}
-		pairs = map[string]string{
-			"(": ")",
-			"[": "]",
-			"{": "}",
-			"<": ">",
 		}
 		scores = make([]int, 0, len(in))
 	)
