@@ -2,6 +2,7 @@
 package day10
 
 import (
+	"sort"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -81,6 +82,10 @@ func checkLine(syms []string) (string, bool) {
 		}
 	}
 
+	if len(stack) != 0 {
+		return strings.Join(stack, ""), false
+	}
+
 	return "", true
 }
 
@@ -103,7 +108,44 @@ func PartOne(in _ParseResult) int {
 
 // PartTwo returns the middle autocomplete score
 func PartTwo(in _ParseResult) int {
-	return 0
+	var (
+		scoreTable = map[string]int{
+			")": 1,
+			"]": 2,
+			"}": 3,
+			">": 4,
+		}
+		pairs = map[string]string{
+			"(": ")",
+			"[": "]",
+			"{": "}",
+			"<": ">",
+		}
+		scores = make([]int, 0, len(in))
+	)
+
+	for _, syms := range in {
+		a, ok := checkLine(syms)
+		if ok {
+			continue
+		}
+
+		if _, ok = scoreTable[a]; !ok {
+			score := 0
+			for i := len(a) - 1; i >= 0; i-- {
+				c := string(a[i])
+				score *= 5
+				score += scoreTable[pairs[c]]
+			}
+
+			scores = append(scores, score)
+		}
+	}
+
+	sort.Ints(scores)
+	mid := len(scores) / 2
+
+	return scores[mid]
 }
 
 func Solution() runner.Solution {
@@ -111,7 +153,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
