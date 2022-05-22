@@ -113,9 +113,28 @@ func PartOne(in _ParseResult) int {
 	return state.flashes
 }
 
+func isSynced(grid _ParseResult) bool {
+	for _, row := range grid {
+		for _, v := range row {
+			if v != 0 {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
 // PartTwo returns the first step that all octopi flash simultaneously
 func PartTwo(in _ParseResult) int {
-	return 0
+	state := state{in, 0}
+	n := 0
+
+	for ; !isSynced(state.grid); n++ {
+		state = step(state)
+	}
+
+	return n
 }
 
 func Solution() runner.Solution {
@@ -123,7 +142,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
