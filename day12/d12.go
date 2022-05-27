@@ -2,13 +2,41 @@
 package day12
 
 import (
+	"strings"
+
+	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
 
-type _ParseResult = map[string][]string
+type _ParseResult = map[string]map[string]bool
 
 func parseLines(in string) (_ParseResult, error) {
+	lines := parse.Lines(in)
 	result := make(_ParseResult)
+
+	for _, l := range lines {
+		nodes := strings.Split(l, "-")
+		a, b := nodes[0], nodes[1]
+
+		if result[a] == nil {
+			result[a] = make(map[string]bool)
+		}
+		if result[b] == nil {
+			result[b] = make(map[string]bool)
+		}
+		// consider start->node edges unidirectional
+		if a == "start" {
+			result[a][b] = true
+			continue
+		}
+		if b == "start" {
+			result[b][a] = true
+			continue
+		}
+
+		result[a][b] = true
+		result[b][a] = true
+	}
 
 	return result, nil
 }
