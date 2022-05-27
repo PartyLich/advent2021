@@ -77,6 +77,48 @@ func traverse(graph _ParseResult, visited []string, from string) [][]string {
 	return paths
 }
 
+// twice returns true if a lowercase node appears 2 or more times in slice s
+func twice(s []string) bool {
+	m := make(map[string]int)
+
+	for _, v := range s {
+		if !isLower(v) {
+			continue
+		}
+
+		m[v] += 1
+		if m[v] >= 2 {
+			return true
+		}
+	}
+
+	return false
+}
+
+func traverse2(graph _ParseResult, visited []string, from string) [][]string {
+	var paths [][]string
+	multi := twice(visited)
+
+	for adj := range graph[from] {
+		// dont revisit lowercase nodes
+		if isLower(adj) && slices.Contains(visited, adj) && multi {
+			continue
+		}
+
+		visited := append(visited, adj)
+
+		// completed path
+		if adj == "end" {
+			paths = append(paths, visited)
+			continue
+		}
+
+		paths = append(paths, traverse2(graph, visited, adj)...)
+	}
+
+	return paths
+}
+
 // PartOne returns the number of paths from start to end, where uppercase nodes
 // may be visited multiple times
 func PartOne(in _ParseResult) int {
@@ -90,7 +132,10 @@ func PartOne(in _ParseResult) int {
 // may be visited multiple times, and a single lowercase node may be visited
 // twice.
 func PartTwo(in _ParseResult) int {
-	return 0
+	visited := []string{"start"}
+	paths := traverse2(in, visited, "start")
+
+	return len(paths)
 }
 
 func Solution() runner.Solution {
@@ -98,7 +143,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
