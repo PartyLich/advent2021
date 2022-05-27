@@ -17,6 +17,7 @@ import (
 	"github.com/partylich/advent2021/day09"
 	"github.com/partylich/advent2021/day10"
 	"github.com/partylich/advent2021/day11"
+	"github.com/partylich/advent2021/day12"
 	"github.com/partylich/advent2021/runner"
 )
 
@@ -47,6 +48,7 @@ func main() {
 		"09": day09.Solution(),
 		"10": day10.Solution(),
 		"11": day11.Solution(),
+		"12": day12.Solution(),
 	}
 
 	switch *userVal {
