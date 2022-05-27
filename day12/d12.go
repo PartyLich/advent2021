@@ -53,6 +53,7 @@ func isLower(s string) bool {
 	return true
 }
 
+// TODO: some optimization with caching computed paths/subpaths?
 func traverse(graph _ParseResult, visited []string, from string) [][]string {
 	var paths [][]string
 
@@ -62,17 +63,15 @@ func traverse(graph _ParseResult, visited []string, from string) [][]string {
 			continue
 		}
 
-		v := make([]string, len(visited), len(visited)+2)
-		copy(v, visited)
-		v = append(v, adj)
+		visited := append(visited, adj)
 
 		// completed path
 		if adj == "end" {
-			paths = append(paths, v)
+			paths = append(paths, visited)
 			continue
 		}
 
-		paths = append(paths, traverse(graph, v, adj)...)
+		paths = append(paths, traverse(graph, visited, adj)...)
 	}
 
 	return paths
