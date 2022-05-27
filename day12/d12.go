@@ -63,14 +63,14 @@ func traverse(graph _ParseResult, visited []string, from string) int {
 			continue
 		}
 
-		v := visited
-		v = append(v, adj)
-
 		// completed path
 		if adj == "end" {
 			paths += 1
 			continue
 		}
+
+		v := visited
+		v = append(v, adj)
 
 		paths += traverse(graph, v, adj)
 	}
@@ -106,14 +106,14 @@ func traverse2(graph _ParseResult, visited []string, from string) int {
 			continue
 		}
 
-		v := visited
-		v = append(v, adj)
-
 		// completed path
 		if adj == "end" {
 			paths += 1
 			continue
 		}
+
+		v := visited
+		v = append(v, adj)
 
 		paths += traverse2(graph, v, adj)
 	}
