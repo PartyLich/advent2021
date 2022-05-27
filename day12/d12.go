@@ -77,7 +77,7 @@ func traverse(graph _ParseResult, visited []string, from string) [][]string {
 	return paths
 }
 
-// PartOne returns the number of paths from start to end, where lowercase nodes
+// PartOne returns the number of paths from start to end, where uppercase nodes
 // may be visited multiple times
 func PartOne(in _ParseResult) int {
 	visited := []string{"start"}
