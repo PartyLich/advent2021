@@ -86,6 +86,13 @@ func PartOne(in _ParseResult) int {
 	return len(paths)
 }
 
+// PartTwo returns the number of paths from start to end, where uppercase nodes
+// may be visited multiple times, and a single lowercase node may be visited
+// twice.
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
