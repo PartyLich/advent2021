@@ -1,6 +1,10 @@
 package day12
 
-import "testing"
+import (
+	"fmt"
+	"os"
+	"testing"
+)
 
 func TestPartOne(t *testing.T) {
 	cases := []struct {
@@ -115,5 +119,41 @@ start-RW
 		if have != c.want {
 			t.Errorf("PartTwo(%v): \n\thave %v, \n\twant %v", in, have, c.want)
 		}
+	}
+}
+
+func BenchmarkPartOne(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "12")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in, err := parseLines(string(input))
+	if err != nil {
+		b.Fatalf("Parse failure")
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartOne(in)
+	}
+}
+
+func BenchmarkPartTwo(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "12")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in, err := parseLines(string(input))
+	if err != nil {
+		b.Fatalf("Parse failure")
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartTwo(in)
 	}
 }
