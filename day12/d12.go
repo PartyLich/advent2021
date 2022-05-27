@@ -54,8 +54,8 @@ func isLower(s string) bool {
 }
 
 // TODO: some optimization with caching computed paths/subpaths?
-func traverse(graph _ParseResult, visited []string, from string) [][]string {
-	var paths [][]string
+func traverse(graph _ParseResult, visited []string, from string) int {
+	paths := 0
 
 	for adj := range graph[from] {
 		// dont revisit lowercase nodes
@@ -63,15 +63,16 @@ func traverse(graph _ParseResult, visited []string, from string) [][]string {
 			continue
 		}
 
-		visited := append(visited, adj)
+		v := visited
+		v = append(v, adj)
 
 		// completed path
 		if adj == "end" {
-			paths = append(paths, visited)
+			paths += 1
 			continue
 		}
 
-		paths = append(paths, traverse(graph, visited, adj)...)
+		paths += traverse(graph, v, adj)
 	}
 
 	return paths
@@ -95,8 +96,8 @@ func twice(s []string) bool {
 	return false
 }
 
-func traverse2(graph _ParseResult, visited []string, from string) [][]string {
-	var paths [][]string
+func traverse2(graph _ParseResult, visited []string, from string) int {
+	var paths int
 	multi := twice(visited)
 
 	for adj := range graph[from] {
@@ -105,15 +106,16 @@ func traverse2(graph _ParseResult, visited []string, from string) [][]string {
 			continue
 		}
 
-		visited := append(visited, adj)
+		v := visited
+		v = append(v, adj)
 
 		// completed path
 		if adj == "end" {
-			paths = append(paths, visited)
+			paths += 1
 			continue
 		}
 
-		paths = append(paths, traverse2(graph, visited, adj)...)
+		paths += traverse2(graph, v, adj)
 	}
 
 	return paths
@@ -125,7 +127,7 @@ func PartOne(in _ParseResult) int {
 	visited := []string{"start"}
 	paths := traverse(in, visited, "start")
 
-	return len(paths)
+	return paths
 }
 
 // PartTwo returns the number of paths from start to end, where uppercase nodes
@@ -135,7 +137,7 @@ func PartTwo(in _ParseResult) int {
 	visited := []string{"start"}
 	paths := traverse2(in, visited, "start")
 
-	return len(paths)
+	return paths
 }
 
 func Solution() runner.Solution {
