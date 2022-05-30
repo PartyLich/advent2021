@@ -130,7 +130,6 @@ func PartOne(in _ParseResult) int {
 	}
 
 	return count
-
 }
 
 // PartTwo returns nonsense, but prints out the result of following all fold
