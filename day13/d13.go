@@ -75,17 +75,67 @@ func parseLines(in string) (_ParseResult, error) {
 	return _ParseResult{grid, is}, nil
 }
 
+func fold(dots [][]bool, i Instruction) [][]bool {
+	var (
+		rInit, cInit int
+		up           bool
+		next         [][]bool
+	)
+
+	switch i.Dir {
+	case Up:
+		rInit = i.Pt + 1
+		next = make([][]bool, i.Pt)
+		copy(next, dots)
+		up = true
+	case Left:
+		cInit = i.Pt + 1
+		next = runner.NewGrid[bool](len(dots), i.Pt)
+		for r, row := range dots {
+			copy(next[r], row)
+		}
+	}
+
+	for r := rInit; r < len(dots); r++ {
+		for c := cInit; c < len(dots[0]); c++ {
+			nextR, nextC := r, c
+			if up {
+				delta := r - i.Pt
+				nextR = i.Pt - delta
+			} else {
+				delta := c - i.Pt
+				nextC = i.Pt - delta
+			}
+
+			next[nextR][nextC] = next[nextR][nextC] || dots[r][c]
+		}
+	}
+
+	return next
+}
+
 // PartOne returns how many dots are visible after completing the first fold
 // instruction.
 func PartOne(in _ParseResult) int {
-	return 0
+	next := fold(in.Dots, in.Instr[0])
+
+	count := 0
+	for _, r := range next {
+		for _, hasDot := range r {
+			if hasDot {
+				count += 1
+			}
+		}
+	}
+
+	return count
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
 			runner.Unimpl,
 		},
 	}
