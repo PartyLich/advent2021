@@ -2,6 +2,9 @@
 package day14
 
 import (
+	"strings"
+
+	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
 
@@ -12,6 +15,15 @@ type _ParseResult struct {
 
 func parseLines(in string) (_ParseResult, error) {
 	var result _ParseResult
+	p := strings.Split(in, "\n\n")
+	result.Tmpl = p[0]
+
+	lines := parse.Lines(p[1])
+	result.Rules = make(map[string]string)
+	for _, l := range lines {
+		parts := strings.Split(l, " -> ")
+		result.Rules[parts[0]] = parts[1]
+	}
 
 	return result, nil
 }
