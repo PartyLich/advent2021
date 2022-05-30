@@ -2,6 +2,7 @@
 package day13
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -129,6 +130,30 @@ func PartOne(in _ParseResult) int {
 	}
 
 	return count
+
+}
+
+// PartTwo returns nonsense, but prints out the result of following all fold
+// instructions.
+func PartTwo(in _ParseResult) int {
+	next := fold(in.Dots, in.Instr[0])
+
+	for _, i := range in.Instr[1:] {
+		next = fold(next, i)
+	}
+
+	for _, r := range next {
+		for _, hasDot := range r {
+			if hasDot {
+				fmt.Print("#")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println()
+	}
+
+	return -1
 }
 
 func Solution() runner.Solution {
@@ -136,7 +161,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
