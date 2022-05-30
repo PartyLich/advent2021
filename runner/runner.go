@@ -1,10 +1,13 @@
 package runner
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"time"
 )
+
+var ErrUnimplemented = errors.New("UNIMPLEMENTED")
 
 // Unimpl returns the string UNIMPLEMENTED
 func Unimpl(_i interface{}) interface{} { return "UNIMPLEMENTED" }
