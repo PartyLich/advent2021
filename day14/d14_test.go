@@ -1,6 +1,8 @@
 package day14
 
 import (
+	"fmt"
+	"os"
 	"testing"
 )
 
@@ -60,4 +62,40 @@ func TestPartTwo(t *testing.T) {
 			t.Fatalf("PartOne(%v) == %v, want %v", in, have, want)
 		}
 	})
+}
+
+func BenchmarkPartOne(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "14")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in, err := parseLines(string(input))
+	if err != nil {
+		b.Fatalf("Parse failure")
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartOne(in)
+	}
+}
+
+func BenchmarkPartTwo(b *testing.B) {
+	fileName := fmt.Sprintf("../input/%v.txt", "14")
+	input, err := os.ReadFile(fileName)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	in, err := parseLines(string(input))
+	if err != nil {
+		b.Fatalf("Parse failure")
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		PartTwo(in)
+	}
 }
