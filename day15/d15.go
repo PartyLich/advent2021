@@ -2,13 +2,32 @@
 package day15
 
 import (
+	"strconv"
+	"strings"
+
+	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
 
 type _ParseResult = [][]int
 
 func parseLines(in string) (_ParseResult, error) {
-	return nil, runner.ErrUnimplemented
+	lines := parse.Lines(in)
+	result := runner.NewGrid[int](len(lines), len(lines[0]))
+
+	for r, l := range lines {
+		row := strings.Split(l, "")
+		for c, nrgStr := range row {
+			nrg, err := strconv.Atoi(nrgStr)
+			if err != nil {
+				panic("parse failure")
+			}
+
+			result[r][c] = nrg
+		}
+	}
+
+	return result, nil
 }
 
 // PartOne returns the lowest total risk of any path from top left to bottom
