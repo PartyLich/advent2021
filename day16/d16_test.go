@@ -17,7 +17,12 @@ func TestPartOne(t *testing.T) {
 		}
 
 		for _, c := range cases {
-			have := PartOne(_ParseResult(c.in))
+			in, err := parseLines(c.in)
+			if err != nil {
+				t.Fatalf("Parse failure")
+			}
+
+			have := PartOne(in)
 			if have != c.want {
 				t.Errorf("PartOne(%v) == %v, want %v", c.in, have, c.want)
 			}
