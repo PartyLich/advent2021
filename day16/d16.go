@@ -61,7 +61,83 @@ func (p _PacketOperator) version() Pversion {
 }
 
 func (p _PacketOperator) value() int {
-	return p.val
+	subs := p.subpackets()
+	value := 0
+
+	switch p.typ {
+	case 0:
+		// type ID 0 are sum packets - their value is the sum of the values of their
+		// sub-packets. If they only have a single sub-packet, their value is the
+		// value of the sub-packet.
+		for _, sub := range subs {
+			value += sub.value()
+		}
+	case 1:
+		// type ID 1 are product packets - their value is the result of multiplying
+		// together the values of their sub-packets. If they only have a single
+		// sub-packet, their value is the value of the sub-packet.
+		value = 1
+		for _, sub := range subs {
+			value *= sub.value()
+		}
+	case 2:
+		// type ID 2 are minimum packets - their value is the minimum of the values
+		// of their sub-packets.
+		value = math.MaxInt
+		for _, sub := range subs {
+			value = runner.Min(value, sub.value())
+		}
+	case 3:
+		// type ID 3 are maximum packets - their value is the maximum of the values
+		// of their sub-packets.
+		value = math.MinInt
+		for _, sub := range subs {
+			value = runner.Max(value, sub.value())
+		}
+	case 5:
+		// type ID 5 are greater than packets - their value is 1 if the value of the
+		// first sub-packet is greater than the value of the second sub-packet;
+		// otherwise, their value is 0.
+		// These packets always have exactly two sub-packets.
+		if len(subs) != 2 {
+			panic("invalid subpacket count")
+		}
+		if subs[0].value() > subs[1].value() {
+			value = 1
+		} else {
+			value = 0
+		}
+	case 6:
+		// type ID 6 are less than packets - their value is 1 if the value of the
+		// first sub-packet is less than the value of the second sub-packet;
+		// otherwise, their value is 0.
+		// These packets always have exactly two sub-packets.
+		if len(subs) != 2 {
+			panic("invalid subpacket count")
+		}
+		if subs[0].value() < subs[1].value() {
+			value = 1
+		} else {
+			value = 0
+		}
+	case 7:
+		// type ID 7 are equal to packets - their value is 1 if the value of the
+		// first sub-packet is equal to the value of the second sub-packet; otherwise,
+		// their value is 0.
+		// These packets always have exactly two sub-packets.
+		if len(subs) != 2 {
+			panic("invalid subpacket count")
+		}
+		if subs[0].value() == subs[1].value() {
+			value = 1
+		} else {
+			value = 0
+		}
+	default:
+		panic("invalid packet type ID")
+	}
+
+	return value
 }
 
 func (p _PacketOperator) subpackets() []_Packet {
@@ -207,7 +283,7 @@ func PartOne(in _ParseResult) int {
 
 // PartTwo returns the value of the outermost packet.
 func PartTwo(in _ParseResult) int {
-	return 0
+	return parsePacket(&in).value()
 }
 
 func Solution() runner.Solution {
@@ -215,7 +291,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
