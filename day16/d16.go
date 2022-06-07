@@ -47,6 +47,26 @@ func (p _PacketLiteral) subpackets() []_Packet {
 	return []_Packet{}
 }
 
+// _PacketOperator performs some calculation on one or more sub-packets contained
+// within.
+type _PacketOperator struct {
+	ver     Pversion
+	val     int
+	packets []_Packet
+}
+
+func (p _PacketOperator) version() Pversion {
+	return p.ver
+}
+
+func (p _PacketOperator) value() int {
+	return p.val
+}
+
+func (p _PacketOperator) subpackets() []_Packet {
+	return p.packets
+}
+
 // Every packet begins with a standard header: the first three bits encode the
 // packet version, and the next three bits encode the packet type ID.
 func header(in *_ParseResult) (Ptype, Pversion) {
@@ -111,6 +131,61 @@ func parseLiteral(in *_ParseResult, ver Pversion) _PacketLiteral {
 	}
 
 	return _PacketLiteral{ver, int(value)}
+}
+
+func parseOperator(in *_ParseResult, ver Pversion) _PacketOperator {
+	idx := in.used / 4
+	skip := in.used % 4
+	end := runner.Min(len(in.msg), idx+6)
+	s := in.msg[idx:end]
+
+	bitLen := 4*len(s) - skip
+
+	msg, _ := strconv.ParseUint(s, 16, 64)
+	if skip != 0 {
+		msg &^= (0xF << bitLen) // clear used bits
+	}
+
+	lenType := msg >> (bitLen - 1)
+	in.used += 1
+
+	var subpacks []_Packet
+
+	switch lenType {
+	case 0:
+		subLen := msg >> (bitLen - 16)
+		subLen &^= (1 << 16)
+		in.used += 15
+
+		start := in.used
+		for done := 0; done < int(subLen); done = in.used - start {
+			p := parsePacket(in)
+			subpacks = append(subpacks, p)
+		}
+
+	default:
+		subCount := msg >> (bitLen - 12)
+		subCount &^= (1 << 11)
+		in.used += 11
+
+		for i := 0; i < int(subCount); i++ {
+			p := parsePacket(in)
+			subpacks = append(subpacks, p)
+		}
+	}
+
+	return _PacketOperator{ver, 0, subpacks}
+}
+
+func parsePacket(in *_ParseResult) _Packet {
+	pType, pVer := header(in)
+
+	switch pType {
+	case 4:
+		return parseLiteral(in, pVer)
+	default:
+		return parseOperator(in, pVer)
+	}
 }
 
 // PartOne returns the sum of the version numbers in all parsed packets
