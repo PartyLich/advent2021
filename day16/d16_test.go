@@ -5,6 +5,28 @@ import (
 )
 
 func TestPartOne(t *testing.T) {
+	t.Run("parse packet header", func(t *testing.T) {
+		cases := []struct {
+			ex _ParseResult
+			t  Ptype
+			v  Pversion
+		}{
+			{_ParseResult{`D2`, 2, 0}, 4, 6},
+			{_ParseResult{`38006F45291200`, 14, 22}, 4, 6},
+			{_ParseResult{`38006F45291200`, 14, 33}, 4, 2},
+		}
+
+		for _, c := range cases {
+			pt, v := header(&c.ex)
+
+			if pt != c.t {
+				t.Errorf("parse header type(%v) \n\thave %b\n\twant %b", c.ex, pt, c.t)
+			}
+			if v != c.v {
+				t.Errorf("parse header version(%v) \n\thave %b\n\twant %b", c.ex, v, c.v)
+			}
+		}
+	})
 	t.Run("executes task", func(t *testing.T) {
 		cases := []struct {
 			in   string
