@@ -204,6 +204,11 @@ func PartOne(in _ParseResult) int {
 	return sumVersions(p)
 }
 
+// PartTwo returns the value of the outermost packet.
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },

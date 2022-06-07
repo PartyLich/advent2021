@@ -96,3 +96,33 @@ func TestPartOne(t *testing.T) {
 		}
 	})
 }
+
+func TestPartTwo(t *testing.T) {
+	t.Run("executes task", func(t *testing.T) {
+		cases := []struct {
+			in   string
+			want int
+		}{
+			{"C200B40A82", 3},
+			{"04005AC33890", 54},
+			{"880086C3E88112", 7},
+			{"CE00C43D881120", 9},
+			{"D8005AC2A8F0", 1},
+			{"F600BC2D8F", 0},
+			{"9C005AC2F8F0", 0},
+			{"9C0141080250320F1802104A08", 1},
+		}
+
+		for _, c := range cases {
+			in, err := parseLines(c.in)
+			if err != nil {
+				t.Fatalf("Parse failure")
+			}
+
+			have := PartTwo(in)
+			if have != c.want {
+				t.Errorf("PartTwo(%v) == %v, want %v", c.in, have, c.want)
+			}
+		}
+	})
+}
