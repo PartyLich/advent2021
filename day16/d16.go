@@ -188,16 +188,27 @@ func parsePacket(in *_ParseResult) _Packet {
 	}
 }
 
+func sumVersions(p _Packet) int {
+	sum := int(p.version())
+	for _, packet := range p.subpackets() {
+		sum += sumVersions(packet)
+	}
+
+	return sum
+}
+
 // PartOne returns the sum of the version numbers in all parsed packets
 func PartOne(in _ParseResult) int {
-	return 0
+	p := parsePacket(&in)
+
+	return sumVersions(p)
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
 			runner.Unimpl,
 		},
 	}
