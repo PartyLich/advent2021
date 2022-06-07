@@ -61,8 +61,8 @@ func TestPartOne(t *testing.T) {
 		}
 
 		for _, c := range cases {
-			_, v := header(&c.ex)
-			have := parseOperator(&c.ex, v)
+			typ, v := header(&c.ex)
+			have := parseOperator(&c.ex, v, typ)
 
 			if have.version() != c.ver {
 				t.Errorf("parse operator(%v) version\n\thave %#v\n\twant %v", c.ex, have, c.ver)

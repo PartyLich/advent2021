@@ -51,6 +51,7 @@ func (p _PacketLiteral) subpackets() []_Packet {
 // within.
 type _PacketOperator struct {
 	ver     Pversion
+	typ     Ptype
 	val     int
 	packets []_Packet
 }
@@ -133,7 +134,7 @@ func parseLiteral(in *_ParseResult, ver Pversion) _PacketLiteral {
 	return _PacketLiteral{ver, int(value)}
 }
 
-func parseOperator(in *_ParseResult, ver Pversion) _PacketOperator {
+func parseOperator(in *_ParseResult, ver Pversion, typ Ptype) _PacketOperator {
 	idx := in.used / 4
 	skip := in.used % 4
 	end := runner.Min(len(in.msg), idx+6)
@@ -174,7 +175,7 @@ func parseOperator(in *_ParseResult, ver Pversion) _PacketOperator {
 		}
 	}
 
-	return _PacketOperator{ver, 0, subpacks}
+	return _PacketOperator{ver, typ, 0, subpacks}
 }
 
 func parsePacket(in *_ParseResult) _Packet {
@@ -184,7 +185,7 @@ func parsePacket(in *_ParseResult) _Packet {
 	case 4:
 		return parseLiteral(in, pVer)
 	default:
-		return parseOperator(in, pVer)
+		return parseOperator(in, pVer, pType)
 	}
 }
 
