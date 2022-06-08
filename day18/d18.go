@@ -11,6 +11,10 @@ func parseLines(in string) (_ParseResult, error) {
 	return "", runner.ErrUnimplemented
 }
 
+func reduce(in string) string {
+	return ""
+}
+
 func add(a, b string) string {
 	return ""
 }
