@@ -121,7 +121,45 @@ loop:
 // PartTwo returns the number of  distinct initial velocity values cause the
 // probe to be within the target area after any step.
 func PartTwo(in _ParseResult) int {
-	return 0
+	// third equation of motion v² = v₀² + 2a∆s
+	// 0 = v₀² + 2(-1)(start of target range - 0)
+	// 0 = v₀² + 2(-1)(start of target range - 0)
+	// √(2 * start) = v₀
+	minVx := int(math.Floor(math.Sqrt(float64(2 * in[0].Min))))
+	minVy := 0
+
+loop:
+	for vx, hit := minVx, false; !hit; vx++ {
+		for minVy = 0; !hit && minVy < 100; minVy++ {
+			_, hit = step(in, vx, minVy)
+			if hit {
+				minVx = vx
+				break loop
+			}
+		}
+	}
+
+	result := 0
+	for vy, missY := in[1].Min, 0; missY < 30; vy++ {
+		hits := 0
+
+		for vx, missX := minVx, 0; missX < 130; vx++ {
+			_, ok := step(in, vx, vy)
+			if ok {
+				hits += 1
+				missX, missY = 0, 0
+			} else {
+				missX += 1
+			}
+		}
+
+		result += hits
+		if hits == 0 {
+			missY += 1
+		}
+	}
+
+	return result
 }
 
 func Solution() runner.Solution {
@@ -129,7 +167,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
