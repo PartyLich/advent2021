@@ -11,6 +11,10 @@ func parseLines(in string) (_ParseResult, error) {
 	return "", runner.ErrUnimplemented
 }
 
+func add(a, b string) string {
+	return ""
+}
+
 func magnitude(in string) int {
 	return 0
 }
