@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/partylich/advent2021/day01"
 	"github.com/partylich/advent2021/day02"
@@ -61,6 +62,8 @@ func main() {
 		"17": day17.Solution(),
 	}
 
+	start := time.Now()
+
 	switch *userVal {
 	case "all":
 		// run all days
@@ -77,6 +80,8 @@ func main() {
 
 		handleErr(runner.RunDay(*userVal, s))
 	}
+
+	fmt.Printf("Total elapsed: %v\n", time.Since(start))
 
 	os.Exit(0)
 }
