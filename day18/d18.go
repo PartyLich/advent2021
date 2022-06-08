@@ -2,13 +2,21 @@
 package day18
 
 import (
+	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
 
-type _ParseResult = string
+type SnailNum string
+type _ParseResult []SnailNum
 
 func parseLines(in string) (_ParseResult, error) {
-	return "", runner.ErrUnimplemented
+	lines := parse.Lines(in)
+	result := make([]SnailNum, len(lines))
+	for i, l := range lines {
+		result[i] = SnailNum(l)
+	}
+
+	return result, nil
 }
 
 func reduce(in string) string {
