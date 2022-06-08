@@ -33,7 +33,16 @@ func magnitude(in string) int {
 
 // PartOne returns the magnitude of the final sum.
 func PartOne(in _ParseResult) int {
-	return 0
+	if len(in) == 0 {
+		return 0
+	}
+
+	result := in[0]
+	for i := 1; i < len(in); i++ {
+		result = add(result, in[i])
+	}
+
+	return magnitude(result)
 }
 
 func Solution() runner.Solution {
