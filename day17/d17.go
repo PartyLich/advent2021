@@ -41,7 +41,9 @@ func parseLines(in string) (_ParseResult, error) {
 }
 
 type Sol struct {
-	v   []int
+	// v is the initial velocity.
+	v []int
+	// top is the highest point [x, y].
 	top []int
 }
 
