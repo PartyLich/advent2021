@@ -3,6 +3,7 @@ package day17
 
 import (
 	"errors"
+	"math"
 	"regexp"
 	"strconv"
 
@@ -39,17 +40,87 @@ func parseLines(in string) (_ParseResult, error) {
 	return []Bound{xB, yB}, nil
 }
 
+type Sol struct {
+	v   []int
+	top []int
+}
+
+func step(b _ParseResult, vx, vy int) (Sol, bool) {
+	var pX, pY int
+	result := Sol{[]int{vx, vy}, []int{0, 0}}
+
+	for pX <= b[0].Max && pY >= b[1].Max {
+		pX += vx
+		pY += vy
+
+		if pY > result.top[1] {
+			result.top[0] = pX
+			result.top[1] = pY
+		}
+		if b[0].InBounds(pX) && b[1].InBounds(pY) {
+			return result, true
+		}
+
+		vx = runner.Max(0, vx-1)
+		vy -= 1
+	}
+
+	return result, false
+}
+
 // PartOne returns the highest y position of any trajectory that has a discrete
 // point in the target area.
 func PartOne(in _ParseResult) int {
-	return 0
+	max := 0
+	minVy := 0
+
+	// third equation of motion v² = v₀² + 2a∆s
+	// 0 = v₀² + 2(-1)(start of target range - 0)
+	// 0 = v₀² + 2(-1)(start of target range - 0)
+	// √(2 * start) = v₀
+	minVx := int(math.Floor(math.Sqrt(float64(2 * in[0].Min))))
+
+loop:
+	for vx, hit := minVx, false; !hit; vx++ {
+		for minVy = 0; !hit && minVy < 100; minVy++ {
+			s, ok := step(in, vx, minVy)
+			hit = ok
+			if hit {
+				max = runner.Max(max, s.top[1])
+				minVx = vx
+				break loop
+			}
+		}
+	}
+
+	for vy, missY := minVy, 0; missY < 50; vy++ {
+		hits := 0
+
+		for vx, missX := minVx, 0; missX < 50; vx++ {
+			s, ok := step(in, vx, vy)
+			if ok {
+				hits += 1
+				max = runner.Max(max, s.top[1])
+
+				missX, missY = 0, 0
+			} else {
+				missX += 1
+			}
+		}
+
+		if hits == 0 {
+			missY += 1
+		}
+	}
+
+	return max
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
 			runner.Unimpl,
 		},
 	}
