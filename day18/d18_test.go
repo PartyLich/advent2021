@@ -23,6 +23,39 @@ func TestPartOne(t *testing.T) {
 			t.Errorf("parse failure: %v", err)
 		}
 	})
+	t.Run("explode number", func(t *testing.T) {
+		cases := []struct {
+			in   SnailNum
+			want SnailNum
+			idx  int
+		}{
+			{"[[[[[9,8],1],2],3],4]", "[[[[0,9],2],3],4]", 0},
+			{"[7,[6,[5,[4,[3,2]]]]]", "[7,[6,[5,[7,0]]]]", 4},
+			{"[[6,[5,[4,[3,2]]]],1]", "[[6,[5,[7,0]]],3]", 3},
+			{"[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", 3},
+			{"[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]", 7},
+			{
+				"[[[[4,0],[5,4]],[[7,0],[15,5]]],[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]]",
+				"[[[[4,0],[5,4]],[[7,0],[15,5]]],[10,[[0,[11,3]],[[6,3],[8,8]]]]]",
+				9,
+			},
+		}
+
+		for _, c := range cases {
+			idx, ok := canExplode(c.in)
+			if !ok {
+				t.Errorf("canExplode(%v) \n\thave %v\n\twant %v", c.in, ok, true)
+			}
+			if idx != c.idx {
+				t.Errorf("canExplode(%v) index \n\thave %v\n\twant %v", c.in, idx, c.idx)
+			}
+
+			have := explode(c.in, idx)
+			if have != c.want {
+				t.Errorf("explode(%v) \n\thave %v\n\twant %v", c.in, have, c.want)
+			}
+		}
+	})
 	t.Run("split number", func(t *testing.T) {
 		cases := []struct {
 			in   SnailNum

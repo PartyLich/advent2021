@@ -19,6 +19,14 @@ func parseLines(in string) (_ParseResult, error) {
 	return result, nil
 }
 
+func canExplode(in SnailNum) (int, bool) {
+	return 0, false
+}
+
+func explode(in SnailNum, i int) SnailNum {
+	return ""
+}
+
 func canSplit(in SnailNum) bool {
 	return false
 }
