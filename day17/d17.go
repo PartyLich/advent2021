@@ -85,8 +85,7 @@ func PartOne(in _ParseResult) int {
 loop:
 	for vx, hit := minVx, false; !hit; vx++ {
 		for minVy = 0; !hit && minVy < 100; minVy++ {
-			s, ok := step(in, vx, minVy)
-			hit = ok
+			s, hit := step(in, vx, minVy)
 			if hit {
 				max = runner.Max(max, s.top[1])
 				minVx = vx
