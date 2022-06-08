@@ -73,14 +73,13 @@ func step(b _ParseResult, vx, vy int) (Sol, bool) {
 // PartOne returns the highest y position of any trajectory that has a discrete
 // point in the target area.
 func PartOne(in _ParseResult) int {
-	max := 0
-	minVy := 0
-
 	// third equation of motion v² = v₀² + 2a∆s
 	// 0 = v₀² + 2(-1)(start of target range - 0)
 	// 0 = v₀² + 2(-1)(start of target range - 0)
 	// √(2 * start) = v₀
 	minVx := int(math.Floor(math.Sqrt(float64(2 * in[0].Min))))
+	minVy := 0
+	max := 0
 
 loop:
 	for vx, hit := minVx, false; !hit; vx++ {
