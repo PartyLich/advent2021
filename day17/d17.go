@@ -51,7 +51,7 @@ func step(b _ParseResult, vx, vy int) (Sol, bool) {
 	var pX, pY int
 	result := Sol{[]int{vx, vy}, []int{0, 0}}
 
-	for pX <= b[0].Max && pY >= b[1].Max {
+	for pX <= b[0].Max && pY >= b[1].Min {
 		pX += vx
 		pY += vy
 
