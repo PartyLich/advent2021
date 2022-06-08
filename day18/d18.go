@@ -11,6 +11,10 @@ func parseLines(in string) (_ParseResult, error) {
 	return "", runner.ErrUnimplemented
 }
 
+func magnitude(in string) int {
+	return 0
+}
+
 // PartOne returns the magnitude of the final sum.
 func PartOne(in _ParseResult) int {
 	return 0
