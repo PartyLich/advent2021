@@ -19,6 +19,14 @@ func parseLines(in string) (_ParseResult, error) {
 	return result, nil
 }
 
+func canSplit(in SnailNum) bool {
+	return false
+}
+
+func split(in SnailNum) SnailNum {
+	return ""
+}
+
 func reduce(in string) string {
 	return ""
 }

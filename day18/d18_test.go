@@ -23,6 +23,28 @@ func TestPartOne(t *testing.T) {
 			t.Errorf("parse failure: %v", err)
 		}
 	})
+	t.Run("split number", func(t *testing.T) {
+		cases := []struct {
+			in   SnailNum
+			want SnailNum
+		}{
+			{"[[[[0,7],4],[15,[0,13]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]"},
+			{"[[[[0,7],4],[[7,8],[0,13]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]"},
+		}
+
+		for _, c := range cases {
+
+			ok := canSplit(c.in)
+			if !ok {
+				t.Errorf("canSplit(%v) \n\thave %v\n\twant %v", c.in, ok, true)
+			}
+
+			have := split(c.in)
+			if have != c.want {
+				t.Errorf("split(%v) \n\thave %v\n\twant %v", c.in, have, c.want)
+			}
+		}
+	})
 	t.Run("reduce number", func(t *testing.T) {
 		cases := []struct {
 			in   SnailNum
