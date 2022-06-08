@@ -118,6 +118,12 @@ loop:
 	return max
 }
 
+// PartTwo returns the number of  distinct initial velocity values cause the
+// probe to be within the target area after any step.
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
