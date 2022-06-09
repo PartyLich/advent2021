@@ -125,8 +125,37 @@ func add(a, b string) string {
 	return ""
 }
 
-func magnitude(in string) int {
-	return 0
+var (
+	rePair     = regexp.MustCompile(`\d+,\d+`)
+	reNumBrack = regexp.MustCompile(`\[(\d+)\]`)
+)
+
+func magnitude(in SnailNum) int {
+	mag := func(s string) string {
+		// 3 times the magnitude of its left element plus 2 times the magnitude of
+		// its right element
+		ns, _ := parse.Csv(s, strconv.Atoi)
+		return fmt.Sprintf("%v", 3*ns[0]+2*ns[1])
+	}
+	unwrap := func(s string) string {
+		foo := reNumBrack.FindStringSubmatch(s)
+		return foo[1]
+	}
+
+	s := string(in)
+	for rePair.MatchString(s) {
+		s = rePair.ReplaceAllStringFunc(s, mag)
+		for reNumBrack.MatchString(s) {
+			s = reNumBrack.ReplaceAllStringFunc(s, unwrap)
+		}
+	}
+
+	result, err := strconv.Atoi(s)
+	if err != nil {
+		panic(err)
+	}
+
+	return result
 }
 
 // PartOne returns the magnitude of the final sum.
