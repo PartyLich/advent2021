@@ -132,8 +132,9 @@ func reduce(in SnailNum) SnailNum {
 	}
 }
 
-func add(a, b string) string {
-	return ""
+func add(a, b SnailNum) SnailNum {
+	result := SnailNum(fmt.Sprintf("[%v,%v]", a, b))
+	return reduce(result)
 }
 
 var (
