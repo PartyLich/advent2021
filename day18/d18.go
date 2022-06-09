@@ -184,6 +184,12 @@ func PartOne(in _ParseResult) int {
 	return magnitude(result)
 }
 
+// PartTwo returns the largest magnitude of any sum of two different snailfish
+// numbers from the homework assignment.
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
