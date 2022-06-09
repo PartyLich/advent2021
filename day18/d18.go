@@ -2,6 +2,10 @@
 package day18
 
 import (
+	"fmt"
+	"regexp"
+	"strconv"
+
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
@@ -27,12 +31,29 @@ func explode(in SnailNum, i int) SnailNum {
 	return ""
 }
 
+var reSplit = regexp.MustCompile(`\d{2,}`)
+
 func canSplit(in SnailNum) bool {
-	return false
+	return reSplit.MatchString(string(in))
 }
 
 func split(in SnailNum) SnailNum {
-	return ""
+	count := 0
+	split := func(s string) string {
+		if count > 0 {
+			return s
+		}
+		count += 1
+
+		i, _ := strconv.Atoi(s)
+		l := i / 2
+		r := l + (i % 2)
+
+		return fmt.Sprintf("[%v,%v]", l, r)
+	}
+
+	s := reSplit.ReplaceAllStringFunc(string(in), split)
+	return SnailNum(s)
 }
 
 func reduce(in string) string {
