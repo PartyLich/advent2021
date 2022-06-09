@@ -188,7 +188,7 @@ func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
 			runner.Unimpl,
 		},
 	}
