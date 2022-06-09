@@ -117,8 +117,19 @@ func split(in SnailNum) SnailNum {
 	return SnailNum(s)
 }
 
-func reduce(in string) string {
-	return ""
+func reduce(in SnailNum) SnailNum {
+	result := in
+	for {
+		idx, exp := canExplode(result)
+		switch {
+		case exp:
+			result = explode(result, idx)
+		case canSplit(result):
+			result = split(result)
+		default:
+			return result
+		}
+	}
 }
 
 func add(a, b string) string {
