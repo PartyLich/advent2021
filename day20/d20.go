@@ -58,6 +58,29 @@ func parseLines(in string) (_ParseResult, error) {
 	return result, nil
 }
 
+// getIndex returns enhancement algorithm index for the pixel at r,c.
+func getIndex(img Image, r, c int) int {
+	var result, idx int
+
+	for i := r + 1; i >= r-1; i-- {
+		for j := c + 1; j >= c-1; j, idx = j-1, idx+1 {
+			var pixel bool
+			if (i < img.minY || i > img.maxY) ||
+				(j < img.minX || j > img.maxX) {
+				pixel = img.void
+			} else {
+				pixel = img.pixels[toKey(i, j)]
+			}
+
+			if pixel {
+				result |= (1 << idx)
+			}
+		}
+	}
+
+	return result
+}
+
 func enhance(algo []bool, image Image) Image {
 	next := NewImage()
 

@@ -20,6 +20,18 @@ func TestPartOne(t *testing.T) {
 			t.Errorf("parse failure: %v", err)
 		}
 	})
+	t.Run("gets index", func(t *testing.T) {
+		in, err := parseLines(ex)
+		if err != nil {
+			t.Fatalf("parse failure: %v", err)
+		}
+
+		want := 34
+		have := getIndex(in.image, 2, 2)
+		if have != want {
+			t.Fatalf("getIndex  \n\thave %v \n\t want %v", have, want)
+		}
+	})
 	t.Run("executes task", func(t *testing.T) {
 		in, err := parseLines(ex)
 		if err != nil {
