@@ -58,9 +58,32 @@ func parseLines(in string) (_ParseResult, error) {
 	return result, nil
 }
 
+func enhance(algo []bool, image Image) Image {
+	next := NewImage()
+
+	return next
+}
+
 // PartOne returns how many pixels are lit after enhancing the image twice.
 func PartOne(in _ParseResult) int {
-	return 0
+	const enhancements = 2
+	var (
+		count int
+		image Image
+	)
+
+	image = in.image
+	for i := 0; i < enhancements; i++ {
+		image = enhance(in.algo, image)
+	}
+
+	for _, v := range image.pixels {
+		if v {
+			count += 1
+		}
+	}
+
+	return count
 }
 
 func Solution() runner.Solution {
