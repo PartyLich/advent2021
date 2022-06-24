@@ -79,6 +79,11 @@ play:
 	return rolls * in[p].score
 }
 
+// PartTwo returns the number of universes the winning player wins in.
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
