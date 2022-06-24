@@ -136,7 +136,24 @@ func PartOne(in _ParseResult) int {
 
 // PartTwo returns how many pixels are lit after enhancing the image 50 times.
 func PartTwo(in _ParseResult) int {
-	return 0
+	const enhancements = 50
+	var (
+		count int
+		image Image
+	)
+
+	image = in.image
+	for i := 0; i < enhancements; i++ {
+		image = enhance(in.algo, image)
+	}
+
+	for _, v := range image.pixels {
+		if v {
+			count += 1
+		}
+	}
+
+	return count
 }
 
 func Solution() runner.Solution {
@@ -144,7 +161,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
