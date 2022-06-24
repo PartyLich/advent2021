@@ -46,3 +46,19 @@ func TestPartOne(t *testing.T) {
 		}
 	})
 }
+
+func TestPartTwo(t *testing.T) {
+	t.Run("executes task x50", func(t *testing.T) {
+		in, err := parseLines(ex)
+		if err != nil {
+			t.Fatalf("parse failure: %v", err)
+		}
+
+		want := 3351
+
+		have := PartTwo(in)
+		if have != want {
+			t.Fatalf("PartOne(%#v) == %v, want %v", in, have, want)
+		}
+	})
+}

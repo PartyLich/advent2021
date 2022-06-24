@@ -134,6 +134,11 @@ func PartOne(in _ParseResult) int {
 	return count
 }
 
+// PartTwo returns how many pixels are lit after enhancing the image 50 times.
+func PartTwo(in _ParseResult) int {
+	return 0
+}
+
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
