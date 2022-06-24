@@ -10,11 +10,15 @@ import (
 	"github.com/partylich/advent2021/runner"
 )
 
-type _ParseResult = []int
+type _ParseResult = []Player
+
+type Player struct {
+	pos, score int
+}
 
 func parseLines(in string) (_ParseResult, error) {
 	lines := parse.Lines(in)
-	result := make([]int, 2)
+	result := make([]Player, 2)
 
 	for r, l := range lines {
 		row := strings.Split(l, " ")
@@ -24,7 +28,7 @@ func parseLines(in string) (_ParseResult, error) {
 			return nil, errors.New("parse failure")
 		}
 
-		result[r] = pos
+		result[r] = Player{pos - 1, 0}
 	}
 
 	return result, nil
