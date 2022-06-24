@@ -34,6 +34,22 @@ func parseLines(in string) (_ParseResult, error) {
 	return result, nil
 }
 
+type Die struct {
+	sides int
+	val   int
+}
+
+func NewDie(sides int) *Die {
+	return &Die{sides, 0}
+}
+
+func (d *Die) Next() int {
+	result := d.val + 1
+	d.val = (d.val + 1) % d.sides
+
+	return result
+}
+
 // PartOne returns the product of the score of the losing player and the number
 // of times the die was rolled.
 func PartOne(in _ParseResult) int {

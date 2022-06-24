@@ -15,6 +15,21 @@ func TestPartOne(t *testing.T) {
 			t.Errorf("parse failure: %v", err)
 		}
 	})
+	t.Run("deterministic die", func(t *testing.T) {
+		d := NewDie(100)
+
+		for i := 1; i <= 100; i++ {
+			have := d.Next()
+			if have != i {
+				t.Fatalf("Die(100) \n\thave %v \n\twant %v", have, i)
+			}
+		}
+
+		have := d.Next()
+		if have != 1 {
+			t.Fatalf("Die(100) \n\thave %v \n\twant %v", have, 1)
+		}
+	})
 	t.Run("executes task", func(t *testing.T) {
 		in, err := parseLines(ex)
 		if err != nil {
