@@ -83,6 +83,31 @@ func getIndex(img Image, r, c int) int {
 
 func enhance(algo []bool, image Image) Image {
 	next := NewImage()
+	visited := make(map[string]bool)
+
+	for r := image.minY - 1; r <= image.maxY+1; r++ {
+		for c := image.minX - 1; c <= image.maxX+1; c++ {
+			k := toKey(r, c)
+			visited[k] = true
+
+			idx := getIndex(image, r, c)
+			if algo[idx] {
+				next.pixels[k] = true
+				next.maxX = runner.Max(next.maxX, c)
+				next.maxY = runner.Max(next.maxY, r)
+				next.minX = runner.Min(next.minX, c)
+				next.minY = runner.Min(next.minY, r)
+			}
+		}
+	}
+
+	// when algo[0] is #, anything outside the current lit pixels becomes
+	// lit. Like, infinitely many pixels
+	if image.void {
+		next.void = algo[511]
+	} else {
+		next.void = algo[0]
+	}
 
 	return next
 }
@@ -113,7 +138,7 @@ func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
 			runner.Unimpl,
 		},
 	}
