@@ -86,15 +86,18 @@ func movePlayer(p Player, move int) Player {
 	return p
 }
 
-func victory(win int, p Player) bool {
-	return p.score >= win
+func victory(win int) func(Player) bool {
+	return func(p Player) bool {
+		return p.score >= win
+	}
 }
 
 func play(state _ParseResult, turn int) [2]int {
-	if victory(21, state[0]) {
+	win := victory(21)
+	if win(state[0]) {
 		return [2]int{1, 0}
 	}
-	if victory(21, state[1]) {
+	if win(state[1]) {
 		return [2]int{0, 1}
 	}
 
