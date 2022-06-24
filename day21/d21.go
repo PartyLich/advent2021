@@ -53,14 +53,37 @@ func (d *Die) Next() int {
 // PartOne returns the product of the score of the losing player and the number
 // of times the die was rolled.
 func PartOne(in _ParseResult) int {
-	return 0
+	var (
+		rolls int
+		p     int // current player
+	)
+	d := NewDie(100)
+
+play:
+	for ; ; p = (p + 1) % 2 {
+		var move int
+		for i := 0; i < 3; i++ {
+			move += d.Next()
+			rolls += 1
+		}
+
+		in[p].pos = (in[p].pos + move) % 10
+		in[p].score += in[p].pos + 1
+
+		if in[p].score >= 1000 {
+			break play
+		}
+	}
+	p = (p + 1) % 2
+
+	return rolls * in[p].score
 }
 
 func Solution() runner.Solution {
 	return runner.Solution{
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
 			runner.Unimpl,
 		},
 	}
