@@ -2,13 +2,30 @@
 package day21
 
 import (
+	"errors"
+	"strconv"
+	"strings"
+
+	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
 
 type _ParseResult = []int
 
 func parseLines(in string) (_ParseResult, error) {
+	lines := parse.Lines(in)
 	result := make([]int, 2)
+
+	for r, l := range lines {
+		row := strings.Split(l, " ")
+		posStr := row[len(row)-1]
+		pos, err := strconv.Atoi(posStr)
+		if err != nil {
+			return nil, errors.New("parse failure")
+		}
+
+		result[r] = pos
+	}
 
 	return result, nil
 }
