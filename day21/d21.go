@@ -3,6 +3,7 @@ package day21
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -94,35 +95,50 @@ func victory(win int) func(Player) bool {
 
 func play(state _ParseResult, turn int) [2]int {
 	win := victory(21)
-	if win(state[0]) {
-		return [2]int{1, 0}
+	cache := make(map[string][2]int)
+	var helper func(_ParseResult, int) [2]int
+
+	helper = func(state _ParseResult, turn int) [2]int {
+		if win(state[0]) {
+			return [2]int{1, 0}
+		}
+		if win(state[1]) {
+			return [2]int{0, 1}
+		}
+
+		result := [2]int{0, 0}
+		moves := [7][]int{
+			{3, 1},
+			{4, 3},
+			{5, 6},
+			{6, 7},
+			{7, 6},
+			{8, 3},
+			{9, 1},
+		}
+
+		for _, m := range moves {
+			s := make(_ParseResult, 2)
+			copy(s, state)
+
+			s[turn] = movePlayer(state[turn], m[0])
+
+			key := fmt.Sprintf("%v,%v", s, (turn+1)%2)
+			var r [2]int
+			if c, ok := cache[key]; ok {
+				r = c
+			} else {
+				r = helper(s, (turn+1)%2)
+				cache[key] = r
+			}
+
+			result[0], result[1] = result[0]+(r[0]*m[1]), result[1]+(r[1]*m[1])
+		}
+
+		return result
 	}
-	if win(state[1]) {
-		return [2]int{0, 1}
-	}
 
-	result := [2]int{0, 0}
-	moves := [7][]int{
-		{3, 1},
-		{4, 3},
-		{5, 6},
-		{6, 7},
-		{7, 6},
-		{8, 3},
-		{9, 1},
-	}
-
-	for _, m := range moves {
-		s := make(_ParseResult, 2)
-		copy(s, state)
-
-		s[turn] = movePlayer(state[turn], m[0])
-
-		r := play(s, (turn+1)%2)
-		result[0], result[1] = result[0]+(r[0]*m[1]), result[1]+(r[1]*m[1])
-	}
-
-	return result
+	return helper(state, turn)
 }
 
 // PartTwo returns the number of universes the winning player wins in.
