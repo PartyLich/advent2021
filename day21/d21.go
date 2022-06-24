@@ -79,9 +79,62 @@ play:
 	return rolls * in[p].score
 }
 
+func movePlayer(p Player, move int) Player {
+	p.pos = (p.pos + move) % 10
+	p.score += p.pos + 1
+
+	return p
+}
+
+func victory(win int, p Player) bool {
+	return p.score >= win
+}
+
+func play(state _ParseResult, turn int) [2]int {
+	if victory(21, state[0]) {
+		return [2]int{1, 0}
+	}
+	if victory(21, state[1]) {
+		return [2]int{0, 1}
+	}
+
+	result := [2]int{0, 0}
+	moves := [7][]int{
+		{3, 1},
+		{4, 3},
+		{5, 6},
+		{6, 7},
+		{7, 6},
+		{8, 3},
+		{9, 1},
+	}
+
+	for _, m := range moves {
+		s := make(_ParseResult, 2)
+		copy(s, state)
+
+		s[turn] = movePlayer(state[turn], m[0])
+
+		r := play(s, (turn+1)%2)
+		result[0], result[1] = result[0]+(r[0]*m[1]), result[1]+(r[1]*m[1])
+	}
+
+	return result
+}
+
 // PartTwo returns the number of universes the winning player wins in.
 func PartTwo(in _ParseResult) int {
-	return 0
+	// 27 universes each turn
+	// 3   1         = 1
+	// 4   2 + 1 + 0 = 3
+	// 5   3 + 2 + 1 = 6
+	// 6   2 + 3 + 2 = 7
+	// 7   1 + 2 + 3 = 6
+	// 8   0 + 1 + 2 = 3
+	// 9   1         = 1
+	r := play(in, 0)
+
+	return runner.Max(r[0], r[1])
 }
 
 func Solution() runner.Solution {
@@ -89,7 +142,7 @@ func Solution() runner.Solution {
 		Parse: func(i string) (interface{}, error) { return parseLines(i) },
 		Fn: [2]func(i interface{}) interface{}{
 			func(i interface{}) interface{} { return PartOne(i.(_ParseResult)) },
-			runner.Unimpl,
+			func(i interface{}) interface{} { return PartTwo(i.(_ParseResult)) },
 		},
 	}
 }
