@@ -26,6 +26,7 @@ import (
 	"github.com/partylich/advent2021/day17"
 	"github.com/partylich/advent2021/day18"
 	"github.com/partylich/advent2021/day20"
+	"github.com/partylich/advent2021/day21"
 	"github.com/partylich/advent2021/runner"
 )
 
@@ -64,6 +65,7 @@ func main() {
 		"17": day17.Solution(),
 		"18": day18.Solution(),
 		"20": day20.Solution(),
+		"21": day21.Solution(),
 	}
 
 	start := time.Now()
