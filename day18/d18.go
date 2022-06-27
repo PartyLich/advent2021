@@ -2,172 +2,232 @@
 package day18
 
 import (
-	"fmt"
-	"regexp"
 	"strconv"
 
 	"github.com/partylich/advent2021/parse"
 	"github.com/partylich/advent2021/runner"
 )
 
-type SnailNum string
-type _ParseResult []SnailNum
+type Node struct {
+	val   int
+	depth int
+	left  *Node
+	right *Node
+}
 
-func parseLines(in string) (_ParseResult, error) {
-	lines := parse.Lines(in)
-	result := make([]SnailNum, len(lines))
-	for i, l := range lines {
-		result[i] = SnailNum(l)
+func (n *Node) Copy() *Node {
+	result := &Node{}
+	*result = *n
+	node := result
+
+	for p := n.right; p != nil; p = p.right {
+		temp := &Node{p.val, p.depth, node, nil}
+		node.right = temp
+		node = temp
+	}
+
+	return result
+}
+
+type _ParseResult []*Node
+
+func parseNum(in string) (*Node, error) {
+	var result, tail *Node
+
+	depth := 0
+	addNode := func(val int) {
+		n := &Node{val, depth, tail, nil}
+		if tail == nil {
+			result = n
+			tail = n
+		} else {
+			tail.right = n
+			tail = n
+		}
+	}
+
+	lastDigit := false
+	s := ""
+	for _, r := range in {
+		switch r {
+		case '[':
+			depth += 1
+			lastDigit = false
+		case ']':
+			if lastDigit {
+				val, e := strconv.Atoi(s)
+				if e != nil {
+					return nil, e
+				}
+				addNode(val)
+			}
+			depth -= 1
+			lastDigit = false
+		case ',':
+			if lastDigit {
+				val, e := strconv.Atoi(s)
+				if e != nil {
+					return nil, e
+				}
+				addNode(val)
+			}
+			lastDigit = false
+		default:
+			if !lastDigit {
+				s = ""
+			}
+
+			lastDigit = true
+			s += string(r)
+		}
 	}
 
 	return result, nil
 }
 
-func canExplode(in SnailNum) (int, bool) {
-	open := 0
-	idx := -1
-	lastDigit := false
-	for _, r := range in {
-		switch r {
-		case '[':
-			open += 1
-			if open == 5 {
-				idx += 1
-				return idx, true
-			}
-			lastDigit = false
-		case ']':
-			open -= 1
-			lastDigit = false
-		case ',':
-			lastDigit = false
-		default:
-			if !lastDigit {
-				idx += 1
-			}
-			lastDigit = true
+func parseLines(in string) (_ParseResult, error) {
+	lines := parse.Lines(in)
+	result := make(_ParseResult, len(lines))
+	for i, l := range lines {
+		r, err := parseNum(l)
+		if err != nil {
+			return nil, err
+		}
+
+		result[i] = r
+	}
+
+	return result, nil
+}
+
+func canExplode(in *Node) (*Node, bool) {
+	maxD, start := maxDepth(in)
+	if maxD < 5 {
+		return nil, false
+	}
+
+	return start, true
+}
+
+func explode(in *Node, start *Node) *Node {
+	node := &Node{0, start.depth - 1, start.left, start.right.right}
+
+	if start.left != nil {
+		start.left.val += start.val
+		start.left.right = node
+	}
+
+	if start.right.right != nil {
+		start.right.right.val += start.right.val
+		start.right.right.left = node
+	}
+
+	*start = *node
+
+	return in
+}
+
+func canSplit(in *Node) (*Node, bool) {
+	for n := in; n != nil; n = n.right {
+		if n.val >= 10 {
+			return n, true
 		}
 	}
 
-	return 0, false
+	return nil, false
 }
 
-func explode(in SnailNum, i int) SnailNum {
-	if len(in) == 0 {
-		panic("explode requires valid SnailNum, received empty string")
+func split(in *Node, start *Node) *Node {
+	l := start.val / 2
+	r := l + (start.val % 2)
+
+	nodeR, nodeL := &Node{}, &Node{}
+	*nodeL = Node{l, start.depth + 1, start.left, nodeR}
+	*nodeR = Node{r, start.depth + 1, nodeL, start.right}
+
+	if start.left != nil {
+		start.left.right = nodeL
+	} else {
+		in = nodeL
+	}
+	if start.right != nil {
+		start.right.left = nodeR
 	}
 
-	result := string(in)
-	re := regexp.MustCompile(`(-?\d+)`)
-	digits := re.FindAllString(result, -1)
-
-	d := make([]int, len(digits))
-	for i, digit := range digits {
-		d[i], _ = strconv.Atoi(digit)
-	}
-
-	// pair's left value is added to the first regular number to the left of the
-	// exploding pair (if any)
-	if i-1 >= 0 {
-		d[i-1] += d[i]
-	}
-	// pair's right value is added to the first regular number to the right of
-	// the exploding pair (if any).
-	if i+2 < len(digits) {
-		d[i+2] += d[i+1]
-	}
-	d[i], d[i+1] = -42, -42
-
-	j := 0
-	subsDigit := func(s string) string {
-		result := fmt.Sprintf("%v", d[j])
-		j++
-
-		return result
-	}
-	result = re.ReplaceAllStringFunc(result, subsDigit)
-
-	reZero := regexp.MustCompile(`\[-42,-42\]`)
-
-	return SnailNum(reZero.ReplaceAllString(result, "0"))
+	return in
 }
 
-var reSplit = regexp.MustCompile(`\d{2,}`)
-
-func canSplit(in SnailNum) bool {
-	return reSplit.MatchString(string(in))
-}
-
-func split(in SnailNum) SnailNum {
-	count := 0
-	split := func(s string) string {
-		if count > 0 {
-			return s
-		}
-		count += 1
-
-		i, _ := strconv.Atoi(s)
-		l := i / 2
-		r := l + (i % 2)
-
-		return fmt.Sprintf("[%v,%v]", l, r)
-	}
-
-	s := reSplit.ReplaceAllStringFunc(string(in), split)
-	return SnailNum(s)
-}
-
-func reduce(in SnailNum) SnailNum {
+func reduce(in *Node) *Node {
 	result := in
 	for {
-		idx, exp := canExplode(result)
+		tmp := result.Copy()
+		idx, explodable := canExplode(tmp)
+		start, splittable := canSplit(tmp)
+
 		switch {
-		case exp:
-			result = explode(result, idx)
-		case canSplit(result):
-			result = split(result)
+		case explodable:
+			result = explode(tmp, idx)
+		case splittable:
+			result = split(tmp, start)
 		default:
 			return result
 		}
 	}
 }
 
-func add(a, b SnailNum) SnailNum {
-	result := SnailNum(fmt.Sprintf("[%v,%v]", a, b))
-	return reduce(result)
+func add(a, b *Node) *Node {
+	var tail *Node
+	list := a.Copy()
+
+	for n := list; n != nil; n = n.right {
+		n.depth += 1
+		tail = n
+	}
+
+	tail.right = b.Copy()
+	tail.right.left = tail
+
+	for n := tail.right; n != nil; n = n.right {
+		n.depth += 1
+	}
+
+	return reduce(list)
 }
 
-var (
-	rePair     = regexp.MustCompile(`\d+,\d+`)
-	reNumBrack = regexp.MustCompile(`\[(\d+)\]`)
-)
+func maxDepth(in *Node) (int, *Node) {
+	var start *Node
+	maxD := -1
 
-func magnitude(in SnailNum) int {
-	mag := func(s string) string {
-		// 3 times the magnitude of its left element plus 2 times the magnitude of
-		// its right element
-		ns, _ := parse.Csv(s, strconv.Atoi)
-		return fmt.Sprintf("%v", 3*ns[0]+2*ns[1])
-	}
-	unwrap := func(s string) string {
-		foo := reNumBrack.FindStringSubmatch(s)
-		return foo[1]
-	}
-
-	s := string(in)
-	for rePair.MatchString(s) {
-		s = rePair.ReplaceAllStringFunc(s, mag)
-		for reNumBrack.MatchString(s) {
-			s = reNumBrack.ReplaceAllStringFunc(s, unwrap)
+	for n := in; n != nil; n = n.right {
+		if n.depth > maxD {
+			maxD = n.depth
+			start = n
 		}
 	}
 
-	result, err := strconv.Atoi(s)
-	if err != nil {
-		panic(err)
+	return maxD, start
+}
+
+func magnitude(in *Node) int {
+	for maxD, start := maxDepth(in); maxD != 0; maxD, start = maxDepth(in) {
+		for n := start; n != nil; n = n.right {
+			if n.depth == maxD {
+				val := (n.val * 3) + (n.right.val * 2)
+				node := &Node{val, maxD - 1, n.left, n.right.right}
+
+				if n.left != nil {
+					n.left.right = node
+				}
+				if n.right.right != nil {
+					n.right.right.left = node
+				}
+
+				*n = *node
+			}
+		}
 	}
 
-	return result
+	return in.val
 }
 
 // PartOne returns the magnitude of the final sum.
